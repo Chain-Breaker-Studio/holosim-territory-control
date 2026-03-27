@@ -52,6 +52,15 @@
             height: 2px; width: 100%; position: absolute; bottom: 0; left: 0;
         }
 
+        /* Estilo para la etiqueta de versión */
+        .version-tag {
+            position: absolute; top: 0; right: 0;
+            padding: 2px 6px; background: rgba(59, 130, 246, 0.1);
+            border-bottom-left-radius: 4px; border-left: 1px solid rgba(59, 130, 246, 0.2);
+            border-bottom: 1px solid rgba(59, 130, 246, 0.2);
+            font-size: 8px; color: rgba(59, 130, 246, 0.5); font-weight: bold;
+        }
+
         @media (max-width: 767px) {
             body { overflow-y: auto; height: auto; }
             .mobile-stack { flex-direction: column !important; align-items: center !important; text-align: center !important; }
@@ -73,6 +82,8 @@
     </style>
 </head>
 <body class="p-2 md:p-6 flex flex-col">
+
+    <div class="version-tag font-header tracking-tighter">BUILD_v1.1.0</div>
 
     <div class="max-w-6xl mx-auto w-full flex flex-col h-full overflow-hidden">
         
