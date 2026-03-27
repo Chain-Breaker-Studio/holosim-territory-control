@@ -14,9 +14,11 @@
         .mud-card { border-left: 4px solid #facc15; }
         .oni-card { border-left: 4px solid #ef4444; }
         .ustur-card { border-left: 4px solid #3b82f6; }
+        .btn-tech { position: relative; overflow: hidden; transition: all 0.3s; border: 1px solid rgba(59, 130, 246, 0.5); }
+        .btn-tech:hover { background: rgba(59, 130, 246, 0.1); border-color: #3b82f6; box-shadow: 0 0 15px rgba(59, 130, 246, 0.3); }
     </style>
 </head>
-<body class="p-4 md:p-8">
+<body class="p-4 md:p-8 mb-20">
 
     <div class="max-w-6xl mx-auto">
         <header class="mb-8 flex justify-between items-end border-b border-white/10 pb-4">
@@ -28,17 +30,23 @@
                 </a>
             </div>
             
-            <div class="text-right relative group">
-                <p class="text-[9px] text-slate-500 uppercase font-bold flex items-center justify-end gap-1 cursor-help">
-                    Time Multiplier <i class="fa-solid fa-circle-info text-[10px] opacity-50"></i>
-                </p>
-                <p id="multiplier" class="text-lg font-header leading-none">--</p>
+            <div class="flex flex-col items-end gap-3">
+                <a href="https://holosim.staratlas.com/" target="_blank" class="btn-tech px-4 py-1.5 rounded-sm bg-blue-500/5 text-[10px] font-header tracking-[0.2em] text-blue-400 uppercase">
+                    <i class="fa-solid fa-rocket mr-2 text-[8px]"></i> [ EXE: LAUNCH_HOLOSIM ]
+                </a>
 
-                <div class="absolute right-0 top-10 w-64 p-3 glass border border-blue-500/20 rounded shadow-2xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50 text-left">
-                    <p class="text-[10px] text-blue-400 font-bold uppercase mb-1 tracking-widest">Dato Técnico</p>
-                    <p class="text-[11px] text-slate-300 leading-relaxed italic">
-                        Este valor corresponde al campo "timeMultiplier" de la API original. Indica el factor de velocidad de cálculo de puntos en la simulación.
+                <div class="text-right relative group">
+                    <p class="text-[9px] text-slate-500 uppercase font-bold flex items-center justify-end gap-1 cursor-help">
+                        Time Multiplier <i class="fa-solid fa-circle-info text-[10px] opacity-50"></i>
                     </p>
+                    <p id="multiplier" class="text-lg font-header leading-none">--</p>
+
+                    <div class="absolute right-0 top-10 w-64 p-3 glass border border-blue-500/20 rounded shadow-2xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50 text-left">
+                        <p class="text-[10px] text-blue-400 font-bold uppercase mb-1 tracking-widest">Dato Técnico</p>
+                        <p class="text-[11px] text-slate-300 leading-relaxed italic">
+                            Este valor corresponde al campo "timeMultiplier" de la API original. Indica el factor de velocidad de cálculo de puntos en la simulación.
+                        </p>
+                    </div>
                 </div>
             </div>
         </header>
@@ -46,9 +54,42 @@
         <div id="container" class="grid grid-cols-1 md:grid-cols-3 gap-6">
         </div>
 
-        <footer class="mt-12 text-center border-t border-white/5 pt-6">
-            <p class="text-slate-600 text-[10px] uppercase tracking-[0.3em]">Official API Feed • Verified Records</p>
-            <p class="text-slate-400 text-xs mt-2">Developed by <span class="text-white font-bold tracking-tighter uppercase">TuNombre @ QUIMERA</span></p>
+        <footer class="mt-16 border-t border-white/10 pt-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-start text-[11px]">
+                
+                <div class="flex flex-col gap-2">
+                    <p class="text-blue-500 font-header uppercase tracking-[0.2em] text-[10px]">Command Operator</p>
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 border border-blue-500/30 rounded bg-blue-500/5 flex items-center justify-center">
+                            <i class="fa-solid fa-user-shield text-blue-400"></i>
+                        </div>
+                        <div>
+                            <p class="text-white font-bold text-sm tracking-tighter uppercase">Daenerys84</p>
+                            <p class="text-slate-500 uppercase text-[9px] tracking-widest font-bold">Chief Director // Quimera Guild</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex flex-col items-center">
+                    <p class="text-amber-500/70 font-header uppercase tracking-[0.2em] text-[10px] mb-3">Infraestructure Support</p>
+                    <a href="https://ko-fi.com/chainbreaker" target="_blank" class="group flex items-center gap-3 px-6 py-2 border border-amber-500/20 bg-amber-500/5 hover:bg-amber-500/10 transition-all rounded">
+                        <i class="fa-solid fa-mug-hot text-amber-500 group-hover:scale-110 transition-transform"></i>
+                        <span class="text-slate-300 font-bold uppercase tracking-widest text-[9px]">Energizar Terminal (Ko-fi)</span>
+                    </a>
+                </div>
+
+                <div class="flex flex-col items-end gap-2 text-right">
+                    <p class="text-slate-500 font-header uppercase tracking-[0.2em] text-[10px]">Communication Channels</p>
+                    <div class="flex gap-4">
+                        <a href="#" class="hover:text-blue-400 transition-colors p-2 glass rounded" title="X Quimera"><i class="fa-brands fa-x-twitter text-sm"></i></a>
+                        <a href="#" class="hover:text-indigo-400 transition-colors p-2 glass rounded" title="Discord Quimera"><i class="fa-brands fa-discord text-sm"></i></a>
+                        <a href="#" class="hover:text-blue-300 transition-colors p-2 glass rounded" title="X Daenerys84"><i class="fa-solid fa-satellite text-sm"></i></a>
+                    </div>
+                    <p class="text-[9px] text-slate-600 italic">"Serving the Star Atlas Community"</p>
+                </div>
+            </div>
+            
+            <p class="text-center text-slate-700 text-[8px] uppercase tracking-[0.5em] mt-12 mb-4">Official Intel Stream // Quimera Assets</p>
         </footer>
     </div>
 
@@ -58,12 +99,11 @@
 
         async function loadData() {
             let data = null;
-            
             try {
                 const res = await fetch(API_ORIGINAL);
                 if(res.ok) data = await res.json();
             } catch (e) {
-                console.log("CORS bloqueado, usando puente de alta velocidad...");
+                console.log("CORS bloqueado...");
             }
 
             if (!data) {
@@ -75,7 +115,6 @@
                     return;
                 }
             }
-
             if (data) render(data);
         }
 
