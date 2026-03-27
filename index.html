@@ -28,9 +28,9 @@
 
         .glass { background: rgba(7, 10, 15, 0.85); border: 1px solid rgba(59, 130, 246, 0.1); backdrop-filter: blur(10px); }
         
-        .card-wrapper { position: relative; padding-top: 12px; height: 100%; transition: all 0.5s ease; }
+        .card-wrapper { position: relative; padding-top: 12px; height: 100%; }
         
-        .neon-card { position: relative; height: 100%; border-radius: 8px; z-index: 10; }
+        .neon-card { position: relative; height: 100%; border-radius: 8px; z-index: 10; display: flex; flex-direction: column; }
         .neon-card::after {
             content: ""; position: absolute; inset: -1px; 
             z-index: -1; filter: blur(10px); opacity: 0.15;
@@ -54,6 +54,10 @@
 
         .leader-glow { box-shadow: 0 0 25px rgba(59, 130, 246, 0.15); border-top: 1px solid rgba(255,255,255,0.1); }
 
+        /* ELIMINAR SCROLL VISIBLE */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
         .btn-execute {
             background: rgba(59, 130, 246, 0.1); border: 1px solid var(--neon-blue);
             box-shadow: 0 0 10px rgba(59, 130, 246, 0.2);
@@ -71,13 +75,8 @@
             font-size: 8px; color: rgba(59, 130, 246, 0.5); font-weight: bold;
         }
 
-        @media (max-width: 767px) {
-            body { overflow-y: auto; height: auto; }
-            .card-wrapper { padding-top: 20px; margin-bottom: 10px; }
-        }
-
-        .tab-content { display: none; }
-        .tab-content.active { display: flex; flex-direction: column; height: 100%; }
+        .tab-content { display: none; height: 100%; }
+        .tab-content.active { display: flex; flex-direction: column; }
         
         @media (min-width: 768px) {
             .tab-content { display: block !important; }
@@ -91,92 +90,56 @@
         @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(59, 130, 246, 0); } 100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); } }
     </style>
 </head>
-<body class="p-2 md:p-6 flex flex-col">
+<body class="p-2 md:p-4 flex flex-col overflow-hidden">
 
-    <div class="version-tag font-header tracking-tighter">BUILD_v1.3.1</div>
+    <div class="version-tag font-header tracking-tighter">BUILD_v1.3.2</div>
 
-    <div class="max-w-6xl mx-auto w-full flex flex-col h-full overflow-hidden">
+    <div class="max-w-7xl mx-auto w-full flex flex-col h-full overflow-hidden">
         
-        <header class="mb-4 md:mb-6 border-b border-blue-500/20 pb-4">
-            <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+        <header class="mb-2 md:mb-4 border-b border-blue-500/20 pb-2">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-2">
                 <div class="flex flex-col items-center md:items-start">
                     <div class="flex items-center gap-2">
                         <div class="dot-pulse"></div>
-                        <h1 class="font-header text-lg md:text-2xl font-bold uppercase tracking-tighter text-blue-500 text-center md:text-left">
-                            HOLOSIM | <span class="text-white">SECTOR DOMINANCE ANALYTICS</span>
+                        <h1 class="font-header text-md md:text-xl font-bold uppercase tracking-tighter text-blue-500">
+                            HOLOSIM | <span class="text-white">SECTOR DOMINANCE</span>
                         </h1>
                     </div>
-                    <div class="flex flex-wrap justify-center md:justify-start items-center gap-2 mt-1">
-                        <p id="data-label" class="text-[8px] md:text-[10px] font-bold text-slate-500 uppercase italic">DATOS OFICIALES DEL:</p>
-                        <p id="data-age" class="text-[8px] md:text-[10px] font-bold text-blue-400 uppercase">Cargando...</p>
-                        <a href="https://holosim-galaxy.staratlas.com/territory-control" target="_blank" class="text-[8px] md:text-[9px] text-blue-400/40 hover:text-blue-400 font-bold uppercase">
-                             <i class="fa-solid fa-link"></i> <span id="api-link-text">FUENTE API STAR ATLAS</span>
-                        </a>
+                    <div class="flex items-center gap-2 mt-0.5">
+                        <p id="data-age" class="text-[8px] md:text-[9px] font-bold text-blue-400 uppercase">Cargando...</p>
                     </div>
                 </div>
 
-                <div class="flex items-center justify-between md:justify-end gap-4 md:gap-8 w-full md:w-auto border-t md:border-t-0 border-white/5 pt-3 md:pt-0">
-                    <div class="flex items-center gap-3">
-                        <div class="flex gap-1 bg-white/5 p-1 rounded border border-white/10">
-                            <button onclick="changeLang('es')" class="text-[9px] font-bold text-blue-400 hover:text-white px-1.5">ES</button>
-                            <button onclick="changeLang('en')" class="text-[9px] font-bold text-blue-400 hover:text-white px-1.5">EN</button>
-                        </div>
-                        
-                        <div class="text-right group relative cursor-help">
-                            <p id="label-multiplier" class="text-[7px] md:text-[9px] text-slate-500 uppercase font-bold tracking-widest leading-none">Multiplicador de Tiempo</p>
-                            <p id="multiplier" class="text-sm md:text-xl font-header leading-none text-white">--</p>
-                            
-                            <div class="absolute right-0 top-10 w-48 p-2 glass text-[9px] text-slate-300 opacity-0 group-hover:opacity-100 transition-all duration-300 z-50 pointer-events-none border border-blue-500/30 shadow-2xl">
-                                <p id="tooltip-text">Este valor corresponde al campo "timeMultiplier" de la API original. Indica el factor de velocidad de cálculo de puntos en la simulación.</p>
-                            </div>
-                        </div>
+                <div class="flex items-center gap-4">
+                    <div class="text-right">
+                        <p id="label-multiplier" class="text-[7px] text-slate-500 uppercase font-bold tracking-widest leading-none">Multiplicador</p>
+                        <p id="multiplier" class="text-xs md:text-lg font-header text-white">--</p>
                     </div>
-                    <a href="https://holosim.staratlas.com/" target="_blank" class="btn-execute px-4 py-2 md:px-6 md:py-2 rounded-sm text-[9px] md:text-[10px] font-header tracking-widest text-blue-400 uppercase">
+                    <a href="https://holosim.staratlas.com/" target="_blank" class="btn-execute px-3 py-1 rounded-sm text-[9px] font-header tracking-widest text-blue-400 uppercase">
                         GO HOLOSIM
                     </a>
                 </div>
             </div>
         </header>
 
-        <div id="mobile-tabs-container" class="mobile-tabs flex gap-1 mb-3"></div>
+        <div id="mobile-tabs-container" class="mobile-tabs flex gap-1 mb-2"></div>
 
-        <div id="container" class="flex flex-col md:flex-row gap-3 md:gap-6 mb-2 md:mb-6 flex-grow overflow-hidden"></div>
+        <div id="container" class="flex flex-col md:flex-row gap-2 md:gap-4 flex-grow overflow-hidden mb-2"></div>
 
-        <footer class="mt-auto glass p-3 md:p-5 rounded-t-xl relative overflow-hidden">
+        <footer class="mt-auto glass p-2 md:p-3 rounded-t-xl relative overflow-hidden">
             <div class="fuel-bar"></div>
-            <div class="flex flex-col md:flex-row justify-between items-center gap-4">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 border border-blue-500/50 rounded-full flex items-center justify-center bg-blue-500/10">
-                        <i class="fa-solid fa-microchip text-blue-400 text-lg"></i>
-                    </div>
-                    <div>
-                        <div class="flex items-center gap-2">
-                            <p class="text-white font-header text-xs tracking-wider uppercase leading-none">Daenerys84</p>
-                            <a href="https://x.com/Daenerys_084" target="_blank" class="text-blue-400 text-[12px] hover:text-white transition-all">
-                                <i class="fa-brands fa-x-twitter"></i>
-                            </a>
-                        </div>
-                        <p id="footer-role" class="text-blue-500/60 uppercase text-[8px] font-bold mt-1 tracking-tighter">Miembro Directivo // Quimera Guild</p>
-                    </div>
+            <div class="flex justify-between items-center">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-microchip text-blue-400 text-xs"></i>
+                    <p class="text-white font-header text-[10px] tracking-wider uppercase">Daenerys84</p>
                 </div>
-
-                <div class="flex flex-col items-center">
-                    <a href="https://ko-fi.com/chainbreaker" target="_blank" class="px-5 py-1.5 bg-amber-500/5 border border-amber-500/30 rounded text-amber-500 font-header text-[9px] tracking-widest uppercase hover:bg-amber-500/10 transition-all flex items-center gap-2">
-                        <i class="fa-solid fa-bolt text-[8px]"></i> <span id="btn-tip">Propina Operativa</span>
+                <div class="flex gap-3">
+                    <a href="https://x.com/QuimeraSA_" target="_blank" class="text-slate-400 hover:text-white transition-colors">
+                        <i class="fa-brands fa-x-twitter text-xs"></i>
                     </a>
-                    <p id="community-text" class="text-[7px] text-slate-500 uppercase mt-1 tracking-[0.2em]">Creado para la comunidad</p>
-                </div>
-
-                <div class="flex items-center gap-4 border-t md:border-t-0 md:border-l border-white/10 pt-3 md:pt-0 md:pl-4">
-                    <p id="follow-text" class="text-[8px] text-slate-500 font-bold uppercase tracking-widest">Sigue a Quimera:</p>
-                    <div class="flex gap-4 text-slate-400">
-                        <a href="https://x.com/QuimeraSA_" target="_blank" class="hover:text-white transition-colors">
-                            <i class="fa-brands fa-x-twitter text-[14px]"></i>
-                        </a>
-                        <a href="https://discord.gg/aVM5KjMeB6" target="_blank" class="hover:text-indigo-400 transition-colors">
-                            <i class="fa-brands fa-discord text-[14px]"></i>
-                        </a>
-                    </div>
+                    <a href="https://discord.gg/aVM5KjMeB6" target="_blank" class="text-slate-400 hover:text-indigo-400 transition-colors">
+                        <i class="fa-brands fa-discord text-xs"></i>
+                    </a>
                 </div>
             </div>
         </footer>
@@ -184,66 +147,15 @@
 
     <script>
         const API_ORIGINAL = 'https://holosim-galaxy.staratlas.com/territory-control';
-        const PROXY_RAPIDO = `https://corsproxy.io/?${encodeURIComponent(API_ORIGINAL)}`;
         let activeTab = 'mud';
         let currentLang = 'es';
 
-        const i18n = {
-            es: { 
-                dataLabel: "DATOS OFICIALES DEL:", 
-                apiLink: "FUENTE API STAR ATLAS",
-                footerRole: "Miembro Directivo // Quimera Guild", 
-                communityText: "Creado para la comunidad", 
-                btnTip: "Propina Operativa", 
-                sectorControl: "Control de Sector",
-                followQuimera: "Sigue a Quimera:",
-                timeMultiplier: "Multiplicador de Tiempo",
-                tooltip: "Este valor corresponde al campo \"timeMultiplier\" de la API original. Indica el factor de velocidad de cálculo de puntos en la simulación."
-            },
-            en: { 
-                dataLabel: "OFFICIAL DATA FROM:", 
-                apiLink: "STAR ATLAS API SOURCE",
-                footerRole: "Executive Member // Quimera Guild", 
-                communityText: "Created for the community", 
-                btnTip: "Support Project", 
-                sectorControl: "Sector Control",
-                followQuimera: "Follow Quimera:",
-                timeMultiplier: "Time Multiplier",
-                tooltip: "This value corresponds to the \"timeMultiplier\" field from the original API. It indicates the speed factor for point calculation in the simulation."
-            }
-        };
-
-        function changeLang(lang) {
-            currentLang = lang;
-            document.getElementById('data-label').innerText = i18n[lang].dataLabel;
-            document.getElementById('api-link-text').innerText = i18n[lang].apiLink;
-            document.getElementById('footer-role').innerText = i18n[lang].footerRole;
-            document.getElementById('community-text').innerText = i18n[lang].communityText;
-            document.getElementById('btn-tip').innerText = i18n[lang].btnTip;
-            document.getElementById('follow-text').innerText = i18n[lang].followQuimera;
-            document.getElementById('label-multiplier').innerText = i18n[lang].timeMultiplier;
-            document.getElementById('tooltip-text').innerText = i18n[lang].tooltip;
-            
-            loadData();
-        }
-
         async function loadData() {
-            let data = null;
             try {
-                const res = await fetch(API_ORIGINAL);
-                if(res.ok) data = await res.json();
-            } catch (e) {}
-            
-            if (!data) {
-                try {
-                    const res = await fetch(PROXY_RAPIDO);
-                    if(res.ok) data = await res.json();
-                } catch (e) {}
-            }
-
-            if (data && data.factions) {
-                render(data);
-            } else {
+                const res = await fetch(`https://corsproxy.io/?${encodeURIComponent(API_ORIGINAL)}`);
+                const data = await res.json();
+                if (data && data.factions) render(data);
+            } catch (e) {
                 document.getElementById('data-age').innerText = "OFFLINE / ERROR";
             }
         }
@@ -253,15 +165,6 @@
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             const target = document.getElementById(`tab-${faction}`);
             if(target) target.classList.add('active');
-            
-            const colors = { mud: '#ef4444', oni: '#3b82f6', ustur: '#facc15' };
-            ['mud', 'oni', 'ustur'].forEach(f => {
-                const btn = document.getElementById(`btn-${f}`);
-                if(btn) {
-                    btn.style.opacity = f === faction ? "1" : "0.5";
-                    btn.style.borderBottom = f === faction ? `2px solid ${colors[f]}` : "none";
-                }
-            });
         }
 
         function render(data) {
@@ -277,58 +180,46 @@
             const sortedFactions = Object.entries(data.factions)
                 .sort(([,a], [,b]) => b.currentPoints - a.currentPoints);
 
-            if (cont.innerHTML === '') activeTab = sortedFactions[0][0];
-
             sortedFactions.forEach(([key]) => {
                 const colorBtn = key === 'mud' ? 'text-red-500' : (key === 'oni' ? 'text-blue-500' : 'text-yellow-500');
                 tabsCont.innerHTML += `
                     <button onclick="showTab('${key}')" id="btn-${key}" 
-                            class="flex-1 py-2 glass text-[10px] font-header ${colorBtn} transition-all">
+                            class="flex-1 py-1.5 glass text-[9px] font-header ${colorBtn}">
                         ${key.toUpperCase()}
-                    </button>
-                `;
+                    </button>`;
             });
 
             sortedFactions.forEach(([key, f], index) => {
                 const isLeader = index === 0;
-                const rank = index + 1;
                 const colorClass = key === 'mud' ? 'text-red-500' : (key === 'oni' ? 'text-blue-500' : 'text-yellow-400');
                 const bgRank = key === 'mud' ? 'bg-red-500/80' : (key === 'oni' ? 'bg-blue-500/80' : 'bg-yellow-500/80');
 
                 cont.innerHTML += `
                     <div id="tab-${key}" class="tab-content flex-1 ${key === activeTab ? 'active' : ''}">
                         <div class="card-wrapper">
-                            <div class="rank-tag ${bgRank} text-black font-header">RANK #${rank}</div>
-                            <div class="glass p-3 md:p-5 rounded-lg neon-card ${key}-card flex flex-col h-full ${isLeader ? 'leader-glow' : ''}">
-                                <div class="flex justify-between items-start mb-2 md:mb-4">
-                                    <div>
-                                        <h2 class="font-header text-xl md:text-2xl font-black uppercase ${colorClass}">${key}</h2>
-                                        <p class="text-[8px] text-slate-500 font-bold uppercase tracking-widest">${i18n[currentLang].sectorControl}</p>
-                                    </div>
-                                    <div class="text-right leading-none">
-                                        <p class="text-lg md:text-xl font-bold font-header text-white">${Math.floor(f.currentPoints).toLocaleString()}</p>
-                                        <p class="text-[8px] md:text-[9px] text-emerald-400 font-bold uppercase mt-1">+${f.pointsAdded.toFixed(2)}</p>
+                            <div class="rank-tag ${bgRank} text-black font-header">RANK #${index + 1}</div>
+                            <div class="glass p-3 rounded-lg neon-card ${key}-card ${isLeader ? 'leader-glow' : ''}">
+                                <div class="flex justify-between items-start mb-2">
+                                    <h2 class="font-header text-lg font-black uppercase ${colorClass}">${key}</h2>
+                                    <div class="text-right">
+                                        <p class="text-md font-bold font-header text-white">${Math.floor(f.currentPoints).toLocaleString()}</p>
+                                        <p class="text-[9px] text-emerald-400 font-bold leading-none">+${f.pointsAdded.toFixed(2)}</p>
                                     </div>
                                 </div>
-                                <div class="space-y-1.5 md:space-y-2 overflow-y-auto pr-1 flex-grow scroll-thin">
-                                    ${f.starbases.sort((a,b) => b.level - a.level).map(sb => {
-                                        const cleanName = sb.name.replace(/_/g, ' ');
-                                        return `
-                                        <div class="flex justify-between items-center border-b border-white/5 py-1.5">
-                                            <span class="text-[13px] text-slate-300 font-bold uppercase truncate mr-2">${cleanName}</span>
-                                            <div class="flex items-center gap-2 shrink-0">
-                                                <span class="text-[10px] bg-white/10 px-1.5 py-0.5 rounded text-slate-300 border border-white/5">L${sb.level}</span>
-                                                <span class="${colorClass} font-bold text-[13px] min-w-[40px] text-right">${sb.points.toFixed(1)}</span>
+                                <div class="flex-grow overflow-y-auto no-scrollbar pr-1">
+                                    ${f.starbases.sort((a,b) => b.level - a.level).map(sb => `
+                                        <div class="flex justify-between items-center border-b border-white/5 py-1">
+                                            <span class="text-[10px] text-slate-300 font-bold uppercase truncate mr-2">${sb.name.replace(/_/g, ' ')}</span>
+                                            <div class="flex items-center gap-1 shrink-0">
+                                                <span class="text-[8px] bg-white/5 px-1 rounded text-slate-400">L${sb.level}</span>
+                                                <span class="${colorClass} font-bold text-[10px] min-w-[30px] text-right">${sb.points.toFixed(1)}</span>
                                             </div>
-                                        </div>`;
-                                    }).join('')}
+                                        </div>`).join('')}
                                 </div>
                             </div>
                         </div>
-                    </div>
-                `;
+                    </div>`;
             });
-
             showTab(activeTab);
         }
 
