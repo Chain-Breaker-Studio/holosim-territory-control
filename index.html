@@ -121,7 +121,7 @@
                             <button onclick="changeLang('es')" class="text-[9px] font-bold text-blue-400 hover:text-white px-1.5">ES</button>
                             <button onclick="changeLang('en')" class="text-[9px] font-bold text-blue-400 hover:text-white px-1.5">EN</button>
                         </div>
-                        <div class="text-right group relative cursor-help">
+                        <div id="multiplier-container" class="text-right group relative cursor-help" title="Factor de aceleración actual del simulador basado en la actividad de la red.">
                             <p id="label-multiplier" class="text-[7px] md:text-[9px] text-slate-500 uppercase font-bold tracking-widest leading-none">Multiplicador de Tiempo</p>
                             <p id="multiplier" class="text-sm md:text-xl font-header leading-none text-white">--</p>
                         </div>
@@ -192,7 +192,8 @@
                 btnTip: "Propina Operativa", 
                 sectorControl: "Control de Sector",
                 followQuimera: "Sigue a Quimera:",
-                timeMultiplier: "Multiplicador de Tiempo"
+                timeMultiplier: "Multiplicador de Tiempo",
+                multiplierDesc: "Factor de aceleración actual del simulador basado en la actividad de la red."
             },
             en: { 
                 dataLabel: "OFFICIAL DATA FROM:", 
@@ -202,7 +203,8 @@
                 btnTip: "Support Project", 
                 sectorControl: "Sector Control",
                 followQuimera: "Follow Quimera:",
-                timeMultiplier: "Time Multiplier"
+                timeMultiplier: "Time Multiplier",
+                multiplierDesc: "Current simulator acceleration factor based on network activity."
             }
         };
 
@@ -215,6 +217,10 @@
             document.getElementById('btn-tip').innerText = i18n[lang].btnTip;
             document.getElementById('follow-text').innerText = i18n[lang].followQuimera;
             document.getElementById('label-multiplier').innerText = i18n[lang].timeMultiplier;
+            
+            // Actualizar la explicación del cursor
+            document.getElementById('multiplier-container').title = i18n[lang].multiplierDesc;
+            
             loadData();
         }
 
@@ -238,13 +244,10 @@
 
         function showTab(faction) {
             activeTab = faction;
-            // Ocultar todos los contenidos
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-            // Mostrar seleccionado
             const target = document.getElementById(`tab-${faction}`);
             if(target) target.classList.add('active');
             
-            // Actualizar visual de botones
             const colors = { mud: '#ef4444', oni: '#3b82f6', ustur: '#facc15' };
             ['mud', 'oni', 'ustur'].forEach(f => {
                 const btn = document.getElementById(`btn-${f}`);
@@ -265,11 +268,9 @@
             cont.innerHTML = '';
             tabsCont.innerHTML = '';
 
-            // 1. Ordenar facciones por puntos
             const sortedFactions = Object.entries(data.factions)
                 .sort(([,a], [,b]) => b.currentPoints - a.currentPoints);
 
-            // 2. Renderizar Botones (Pestañas móviles) en el nuevo orden
             sortedFactions.forEach(([key]) => {
                 const colorBtn = key === 'mud' ? 'text-red-500' : (key === 'oni' ? 'text-blue-500' : 'text-yellow-500');
                 tabsCont.innerHTML += `
@@ -280,7 +281,6 @@
                 `;
             });
 
-            // 3. Renderizar Contenido de Tarjetas
             sortedFactions.forEach(([key, f], index) => {
                 const isLeader = index === 0;
                 const rank = index + 1;
@@ -319,7 +319,6 @@
                 `;
             });
 
-            // 4. Refrescar el estado visual de la pestaña activa después de recrear botones
             showTab(activeTab);
         }
 
