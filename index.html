@@ -14,134 +14,117 @@
             --neon-amber: #f59e0b;
         }
 
-        body { background: #010204; color: #e2e8f0; font-family: 'Rajdhani', sans-serif; overflow-x: hidden; }
+        body { 
+            background: #010204; color: #e2e8f0; font-family: 'Rajdhani', sans-serif; 
+            overflow-x: hidden; height: 100vh; display: flex; flex-direction: column;
+        }
         .font-header { font-family: 'Orbitron', sans-serif; }
         
-        /* Fondo de rejilla táctica */
         body::before {
             content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background-image: linear-gradient(rgba(59, 130, 246, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(59, 130, 246, 0.03) 1px, transparent 1px);
-            background-size: 30px 30px; z-index: -1;
+            background-size: 20px 20px; z-index: -1;
         }
 
-        .glass { background: rgba(7, 10, 15, 0.8); border: 1px solid rgba(59, 130, 246, 0.1); backdrop-filter: blur(10px); }
+        .glass { background: rgba(7, 10, 15, 0.85); border: 1px solid rgba(59, 130, 246, 0.1); backdrop-filter: blur(8px); }
         
-        /* Glow Estático (Sin parpadeo) */
+        /* Glow Estático Suave */
         .neon-card { position: relative; }
         .neon-card::after {
-            content: ""; position: absolute; inset: -2px; 
-            z-index: -1; filter: blur(12px); opacity: 0.15;
+            content: ""; position: absolute; inset: -1px; 
+            z-index: -1; filter: blur(10px); opacity: 0.12;
             border-radius: 8px;
         }
 
-        /* Colores específicos de Glow por Facción */
         .mud-card::after { background: #facc15; }
         .oni-card::after { background: #ef4444; }
         .ustur-card::after { background: #3b82f6; }
 
-        .mud-card { border: 1px solid rgba(250, 204, 21, 0.2); border-left: 4px solid #facc15; }
-        .oni-card { border: 1px solid rgba(239, 68, 68, 0.2); border-left: 4px solid #ef4444; }
-        .ustur-card { border: 1px solid rgba(59, 130, 246, 0.2); border-left: 4px solid #3b82f6; }
+        .mud-card { border-left: 3px solid #facc15; }
+        .oni-card { border-left: 3px solid #ef4444; }
+        .ustur-card { border-left: 3px solid #3b82f6; }
 
-        /* Botón Execute con Scanline */
         .btn-execute {
-            background: rgba(59, 130, 246, 0.1);
-            border: 1px solid var(--neon-blue);
-            box-shadow: 0 0 10px rgba(59, 130, 246, 0.2);
+            background: rgba(59, 130, 246, 0.1); border: 1px solid var(--neon-blue);
+            box-shadow: 0 0 8px rgba(59, 130, 246, 0.2);
             position: relative; overflow: hidden;
         }
         .btn-execute::before {
-            content: ""; position: absolute; top: -100%; left: 0; width: 100%; height: 20px;
-            background: rgba(255,255,255,0.1); transform: skewY(-10deg);
-            animation: scan 3s infinite linear;
+            content: ""; position: absolute; top: -100%; left: 0; width: 100%; height: 15px;
+            background: rgba(255,255,255,0.08); transform: skewY(-10deg);
+            animation: scan 4s infinite linear;
         }
-        @keyframes scan {
-            0% { top: -100%; }
-            100% { top: 200%; }
-        }
+        @keyframes scan { 0% { top: -100%; } 100% { top: 200%; } }
 
-        /* Barra de Energía Ko-fi */
         .fuel-bar {
             background: linear-gradient(90deg, var(--neon-amber) 0%, transparent 100%);
             height: 2px; width: 100%; position: absolute; bottom: 0; left: 0;
-            box-shadow: 0 0 10px var(--neon-amber);
+            box-shadow: 0 0 8px var(--neon-amber);
+        }
+
+        /* Ajuste para que todo quepa en una pantalla sin scroll */
+        @media (min-height: 800px) and (min-width: 768px) {
+            body { overflow: hidden; }
         }
     </style>
 </head>
-<body class="p-4 md:p-8">
+<body class="p-3 md:p-6">
 
-    <div class="max-w-6xl mx-auto">
-        <header class="mb-10 flex flex-col md:flex-row justify-between items-start md:items-end border-b border-blue-500/20 pb-6">
-            <div class="mb-4 md:mb-0">
-                <div class="flex items-center gap-2 mb-1">
+    <div class="max-w-6xl mx-auto w-full flex flex-col h-full">
+        <header class="mb-4 flex flex-col md:flex-row justify-between items-start md:items-center border-b border-blue-500/20 pb-3">
+            <div>
+                <div class="flex items-center gap-2">
                     <span class="w-2 h-2 bg-blue-500 rounded-full animate-ping"></span>
-                    <h1 class="font-header text-2xl font-bold uppercase tracking-tighter text-blue-500">Holosim <span class="text-white">Analytics</span></h1>
+                    <h1 class="font-header text-xl md:text-2xl font-bold uppercase tracking-tighter text-blue-500">Holosim <span class="text-white">Analytics</span></h1>
                 </div>
-                <p id="data-age" class="text-[10px] font-bold text-slate-500 uppercase tracking-widest leading-none italic uppercase">Iniciando sistemas de mando...</p>
-                <a href="https://holosim-galaxy.staratlas.com/territory-control" target="_blank" class="text-[9px] text-blue-400/40 hover:text-blue-400 transition-colors flex items-center gap-1 mt-2 uppercase tracking-wider font-bold">
-                    <i class="fa-solid fa-satellite-dish text-[8px]"></i> Feed: Star Atlas Real-Time API
-                </a>
+                <p id="data-age" class="text-[9px] font-bold text-slate-500 uppercase tracking-widest italic leading-none mt-1">Sincronizando Mando...</p>
             </div>
             
-            <div class="flex flex-col items-end gap-4">
-                <a href="https://holosim.staratlas.com/" target="_blank" class="btn-execute px-6 py-2 rounded-sm text-[10px] font-header tracking-[0.3em] text-blue-400 uppercase group transition-all hover:scale-105">
-                    <i class="fa-solid fa-terminal mr-2 text-[8px] group-hover:text-white"></i> [ EXE: LAUNCH_HOLOSIM ]
-                </a>
-
-                <div class="text-right relative group">
-                    <p class="text-[9px] text-slate-500 uppercase font-bold flex items-center justify-end gap-1 cursor-help tracking-widest">
-                        Time Multiplier <i class="fa-solid fa-circle-info text-[10px] opacity-40"></i>
-                    </p>
-                    <p id="multiplier" class="text-xl font-header leading-none text-white">--</p>
-
-                    <div class="absolute right-0 top-12 w-64 p-4 glass border border-blue-500/30 rounded shadow-2xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50 text-left">
-                        <p class="text-[10px] text-blue-400 font-bold uppercase mb-2 tracking-widest font-header border-b border-blue-500/20 pb-1">Technical Data</p>
-                        <p class="text-[11px] text-slate-300 leading-relaxed italic">
-                            Factor de velocidad <span class="text-blue-400 font-mono">"timeMultiplier"</span>. Controla la frecuencia de refresco de puntos en la simulación del servidor.
-                        </p>
-                    </div>
+            <div class="flex items-center gap-4 mt-3 md:mt-0 w-full md:w-auto justify-between md:justify-end">
+                <div class="text-right group relative">
+                    <p class="text-[8px] text-slate-500 uppercase font-bold tracking-widest leading-none mb-1">Time Multiplier</p>
+                    <p id="multiplier" class="text-lg font-header leading-none text-white tracking-tighter">--</p>
                 </div>
+                <a href="https://holosim.staratlas.com/" target="_blank" class="btn-execute px-4 py-1.5 rounded-sm text-[9px] font-header tracking-[0.2em] text-blue-400 uppercase group transition-all hover:scale-105">
+                    [ EXE: LAUNCH ]
+                </a>
             </div>
         </header>
 
-        <div id="container" class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+        <div id="container" class="grid grid-cols-1 md:grid-cols-3 gap-4 flex-grow overflow-y-auto md:overflow-visible pr-1">
             </div>
 
-        <footer class="mt-20 glass border-t-0 p-8 rounded-t-xl relative overflow-hidden">
+        <footer class="mt-4 glass p-4 rounded-t-lg relative overflow-hidden">
             <div class="fuel-bar"></div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-10 items-center">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-4 text-center md:text-left">
                 
-                <div class="flex items-center gap-4">
+                <div class="flex items-center gap-3">
                     <div class="relative">
-                        <div class="w-12 h-12 border-2 border-blue-500/50 rounded-full flex items-center justify-center bg-blue-500/10 shadow-[0_0_15px_rgba(59,130,246,0.2)]">
-                            <i class="fa-solid fa-shield-halved text-blue-400 text-xl"></i>
+                        <div class="w-10 h-10 border border-blue-500/40 rounded-full flex items-center justify-center bg-blue-500/10 shadow-[0_0_10px_rgba(59,130,246,0.1)]">
+                            <i class="fa-solid fa-shield-halved text-blue-400 text-lg"></i>
                         </div>
-                        <span class="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 border-2 border-[#010204] rounded-full shadow-[0_0_5px_#22c55e]"></span>
+                        <span class="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-500 border-2 border-[#010204] rounded-full"></span>
                     </div>
                     <div>
-                        <p class="text-white font-header text-sm tracking-widest uppercase">Daenerys84</p>
-                        <p class="text-blue-500/60 uppercase text-[9px] tracking-[0.2em] font-bold">Chief Director // Quimera Guild</p>
+                        <p class="text-white font-header text-xs tracking-wider uppercase leading-none">Daenerys84</p>
+                        <p class="text-blue-500/60 uppercase text-[8px] tracking-widest font-bold mt-1">Chief Director // Quimera</p>
                     </div>
                 </div>
 
-                <div class="flex flex-col items-center">
-                    <a href="https://ko-fi.com/chainbreaker" target="_blank" class="group relative px-8 py-3 bg-amber-500/5 border border-amber-500/30 rounded transition-all hover:bg-amber-500/10">
-                        <div class="flex items-center gap-3">
-                            <i class="fa-solid fa-bolt-lightning text-amber-500 animate-pulse"></i>
-                            <span class="text-amber-500 font-header text-[10px] tracking-[0.3em] uppercase">Energizar Sistema</span>
-                        </div>
-                        <p class="text-[8px] text-slate-500 mt-1 text-center uppercase tracking-widest group-hover:text-slate-300 transition-colors italic">Soporte Operativo Ko-fi</p>
-                    </a>
-                </div>
-
-                <div class="flex flex-col md:items-end gap-3">
-                    <div class="flex gap-3">
-                        <a href="#" class="w-10 h-10 glass flex items-center justify-center hover:border-blue-500 transition-all rounded text-slate-400 hover:text-white" title="X Quimera"><i class="fa-brands fa-x-twitter"></i></a>
-                        <a href="#" class="w-10 h-10 glass flex items-center justify-center hover:border-indigo-500 transition-all rounded text-slate-400 hover:text-white" title="Discord Quimera"><i class="fa-brands fa-discord"></i></a>
-                        <a href="#" class="w-10 h-10 glass flex items-center justify-center hover:border-blue-400 transition-all rounded text-slate-400 hover:text-white" title="X Daenerys84"><i class="fa-solid fa-microchip"></i></a>
+                <a href="https://ko-fi.com/chainbreaker" target="_blank" class="group px-6 py-2 bg-amber-500/5 border border-amber-500/20 rounded-sm hover:bg-amber-500/10 transition-all">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-bolt-lightning text-amber-500 text-[10px] animate-pulse"></i>
+                        <span class="text-amber-500 font-header text-[9px] tracking-widest uppercase">Energizar</span>
                     </div>
-                    <p class="text-[9px] text-slate-600 uppercase tracking-widest font-bold">Signal Secured by Quimera Intel</p>
+                </a>
+
+                <div class="flex gap-4 items-center">
+                    <div class="flex gap-2">
+                        <a href="#" class="text-slate-500 hover:text-white transition-colors"><i class="fa-brands fa-x-twitter text-sm"></i></a>
+                        <a href="#" class="text-slate-500 hover:text-white transition-colors"><i class="fa-brands fa-discord text-sm"></i></a>
+                        <a href="#" class="text-slate-500 hover:text-white transition-colors"><i class="fa-solid fa-microchip text-sm"></i></a>
+                    </div>
+                    <p class="text-[8px] text-slate-600 uppercase tracking-widest font-bold border-l border-white/10 pl-4 hidden md:block">Quimera Intel Secured</p>
                 </div>
             </div>
         </footer>
@@ -156,14 +139,14 @@
             try {
                 const res = await fetch(API_ORIGINAL);
                 if(res.ok) data = await res.json();
-            } catch (e) { console.log("CORS Bypass activo..."); }
+            } catch (e) {}
 
             if (!data) {
                 try {
                     const res = await fetch(PROXY_RAPIDO);
                     if(res.ok) data = await res.json();
                 } catch (e) {
-                    document.getElementById('data-age').innerText = "SYSTEM ERROR: CONNECTION LOST";
+                    document.getElementById('data-age').innerText = "ERROR: OFFLINE";
                     return;
                 }
             }
@@ -172,7 +155,7 @@
 
         function render(data) {
             const date = new Date(data.timestamp);
-            document.getElementById('data-age').innerText = "CONSOLA SINCRONIZADA: " + date.toLocaleTimeString();
+            document.getElementById('data-age').innerText = "CONSOLA ONLINE: " + date.toLocaleTimeString();
             document.getElementById('multiplier').innerText = data.timeMultiplier.toFixed(4);
 
             const cont = document.getElementById('container');
@@ -183,24 +166,21 @@
                 const colorClass = key === 'mud' ? 'text-yellow-400' : (key === 'oni' ? 'text-red-500' : 'text-blue-500');
                 
                 cont.innerHTML += `
-                    <div class="glass p-6 rounded-lg neon-card ${key}-card shadow-2xl transition-all duration-300 hover:translate-y-[-4px]">
-                        <div class="flex justify-between items-start mb-8">
-                            <div>
-                                <h2 class="font-header text-3xl font-black uppercase tracking-tighter ${colorClass}">${key}</h2>
-                                <p class="text-[8px] text-slate-500 font-bold tracking-[0.4em] uppercase">Sector Control</p>
-                            </div>
+                    <div class="glass p-4 rounded-lg neon-card ${key}-card flex flex-col h-full">
+                        <div class="flex justify-between items-start mb-4">
+                            <h2 class="font-header text-2xl font-black uppercase tracking-tighter ${colorClass}">${key}</h2>
                             <div class="text-right">
-                                <p class="text-2xl font-bold font-header leading-none text-white tracking-tighter">${Math.floor(f.currentPoints).toLocaleString()}</p>
-                                <p class="text-[10px] text-emerald-400 font-bold uppercase mt-1 tracking-widest">+${f.pointsAdded.toFixed(2)}</p>
+                                <p class="text-xl font-bold font-header leading-none text-white tracking-tighter">${Math.floor(f.currentPoints).toLocaleString()}</p>
+                                <p class="text-[9px] text-emerald-400 font-bold uppercase mt-0.5 tracking-tighter">+${f.pointsAdded.toFixed(2)}</p>
                             </div>
                         </div>
-                        <div class="space-y-3">
+                        <div class="space-y-1.5 overflow-y-auto max-h-[35vh] md:max-h-none">
                             ${f.starbases.sort((a,b) => b.level - a.level).map(sb => `
-                                <div class="flex justify-between items-center border-b border-white/5 pb-2">
-                                    <span class="text-[11px] text-slate-400 font-bold uppercase tracking-wider">${sb.name}</span>
-                                    <div class="flex items-center gap-3">
-                                        <span class="text-[9px] bg-white/5 px-2 py-0.5 rounded text-slate-300 font-bold">LVL ${sb.level}</span>
-                                        <span class="${colorClass} font-bold text-xs">${sb.points.toFixed(1)}</span>
+                                <div class="flex justify-between items-center border-b border-white/5 pb-1">
+                                    <span class="text-[10px] text-slate-400 font-bold uppercase truncate pr-2">${sb.name}</span>
+                                    <div class="flex items-center gap-2 shrink-0">
+                                        <span class="text-[8px] bg-white/5 px-1 rounded text-slate-300">L${sb.level}</span>
+                                        <span class="${colorClass} font-bold text-[10px]">${sb.points.toFixed(1)}</span>
                                     </div>
                                 </div>
                             `).join('')}
