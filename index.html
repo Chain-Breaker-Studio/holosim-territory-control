@@ -121,9 +121,14 @@
                             <button onclick="changeLang('es')" class="text-[9px] font-bold text-blue-400 hover:text-white px-1.5">ES</button>
                             <button onclick="changeLang('en')" class="text-[9px] font-bold text-blue-400 hover:text-white px-1.5">EN</button>
                         </div>
-                        <div id="multiplier-container" class="text-right group relative cursor-help" title="Factor de aceleración actual del simulador basado en la actividad de la red.">
+                        
+                        <div class="text-right group relative cursor-help">
                             <p id="label-multiplier" class="text-[7px] md:text-[9px] text-slate-500 uppercase font-bold tracking-widest leading-none">Multiplicador de Tiempo</p>
                             <p id="multiplier" class="text-sm md:text-xl font-header leading-none text-white">--</p>
+                            
+                            <div class="absolute right-0 top-10 w-48 p-2 glass text-[9px] text-slate-300 opacity-0 group-hover:opacity-100 transition-all duration-300 z-50 pointer-events-none border border-blue-500/30 shadow-2xl">
+                                <p id="tooltip-text">Este valor corresponde al campo "timeMultiplier" de la API original. Indica el factor de velocidad de cálculo de puntos en la simulación.</p>
+                            </div>
                         </div>
                     </div>
                     <a href="https://holosim.staratlas.com/" target="_blank" class="btn-execute px-4 py-2 md:px-6 md:py-2 rounded-sm text-[9px] md:text-[10px] font-header tracking-widest text-blue-400 uppercase">
@@ -193,7 +198,7 @@
                 sectorControl: "Control de Sector",
                 followQuimera: "Sigue a Quimera:",
                 timeMultiplier: "Multiplicador de Tiempo",
-                multiplierDesc: "Factor de aceleración actual del simulador basado en la actividad de la red."
+                tooltip: "Este valor corresponde al campo \"timeMultiplier\" de la API original. Indica el factor de velocidad de cálculo de puntos en la simulación."
             },
             en: { 
                 dataLabel: "OFFICIAL DATA FROM:", 
@@ -204,7 +209,7 @@
                 sectorControl: "Sector Control",
                 followQuimera: "Follow Quimera:",
                 timeMultiplier: "Time Multiplier",
-                multiplierDesc: "Current simulator acceleration factor based on network activity."
+                tooltip: "This value corresponds to the \"timeMultiplier\" field from the original API. It indicates the speed factor for point calculation in the simulation."
             }
         };
 
@@ -217,9 +222,7 @@
             document.getElementById('btn-tip').innerText = i18n[lang].btnTip;
             document.getElementById('follow-text').innerText = i18n[lang].followQuimera;
             document.getElementById('label-multiplier').innerText = i18n[lang].timeMultiplier;
-            
-            // Actualizar la explicación del cursor
-            document.getElementById('multiplier-container').title = i18n[lang].multiplierDesc;
+            document.getElementById('tooltip-text').innerText = i18n[lang].tooltip;
             
             loadData();
         }
