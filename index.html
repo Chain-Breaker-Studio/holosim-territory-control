@@ -27,19 +27,9 @@
         }
 
         .glass { background: rgba(7, 10, 15, 0.85); border: 1px solid rgba(59, 130, 246, 0.1); backdrop-filter: blur(10px); }
-        
         .card-wrapper { position: relative; padding-top: 12px; height: 100%; transition: all 0.5s ease; }
-        
         .neon-card { position: relative; height: 100%; border-radius: 8px; z-index: 10; }
-        .neon-card::after {
-            content: ""; position: absolute; inset: -1px; 
-            z-index: -1; filter: blur(10px); opacity: 0.15;
-            border-radius: 8px;
-        }
 
-        .mud-card::after { background: #ef4444; }
-        .oni-card::after { background: #3b82f6; }
-        .ustur-card::after { background: #facc15; }
         .mud-card { border-left: 4px solid #ef4444; }
         .oni-card { border-left: 4px solid #3b82f6; }
         .ustur-card { border-left: 4px solid #facc15; }
@@ -53,23 +43,18 @@
         }
 
         .leader-glow { box-shadow: 0 0 25px rgba(59, 130, 246, 0.15); border-top: 1px solid rgba(255,255,255,0.1); }
-
-        .btn-execute {
-            background: rgba(59, 130, 246, 0.1); border: 1px solid var(--neon-blue);
-            box-shadow: 0 0 10px rgba(59, 130, 246, 0.2);
-        }
-
-        .fuel-bar {
-            background: linear-gradient(90deg, var(--neon-amber) 0%, transparent 100%);
-            height: 2px; width: 100%; position: absolute; bottom: 0; left: 0;
-        }
+        .btn-execute { background: rgba(59, 130, 246, 0.1); border: 1px solid var(--neon-blue); box-shadow: 0 0 10px rgba(59, 130, 246, 0.2); }
+        .fuel-bar { background: linear-gradient(90deg, var(--neon-amber) 0%, transparent 100%); height: 2px; width: 100%; position: absolute; bottom: 0; left: 0; }
 
         .version-tag {
             position: absolute; top: 0; right: 0;
-            padding: 2px 6px; background: rgba(59, 130, 246, 0.1);
-            border-bottom-left-radius: 4px; border-left: 1px solid rgba(59, 130, 246, 0.2);
-            font-size: 8px; color: rgba(59, 130, 246, 0.5); font-weight: bold;
+            padding: 2px 8px; background: rgba(59, 130, 246, 0.15);
+            border-bottom-left-radius: 4px; border-left: 1px solid rgba(59, 130, 246, 0.3);
+            font-size: 9px; color: #3b82f6; font-weight: bold; z-index: 100;
         }
+
+        .scroll-thin::-webkit-scrollbar { width: 3px; }
+        .scroll-thin::-webkit-scrollbar-thumb { background: rgba(59, 130, 246, 0.3); border-radius: 10px; }
 
         @media (max-width: 767px) {
             body { overflow-y: auto; height: auto; }
@@ -93,7 +78,7 @@
 </head>
 <body class="p-2 md:p-6 flex flex-col">
 
-    <div class="version-tag font-header tracking-tighter">BUILD_v1.3.0</div>
+    <div class="version-tag font-header tracking-tighter">BUILD_v1.3.5</div>
 
     <div class="max-w-6xl mx-auto w-full flex flex-col h-full overflow-hidden">
         
@@ -108,7 +93,7 @@
                     </div>
                     <div class="flex flex-wrap justify-center md:justify-start items-center gap-2 mt-1">
                         <p id="data-label" class="text-[8px] md:text-[10px] font-bold text-slate-500 uppercase italic">DATOS OFICIALES DEL:</p>
-                        <p id="data-age" class="text-[8px] md:text-[10px] font-bold text-blue-400 uppercase">Cargando...</p>
+                        <p id="data-age" class="text-[8px] md:text-[10px] font-bold text-blue-400 uppercase">Sincronizando...</p>
                         <a href="https://holosim-galaxy.staratlas.com/territory-control" target="_blank" class="text-[8px] md:text-[9px] text-blue-400/40 hover:text-blue-400 font-bold uppercase">
                              <i class="fa-solid fa-link"></i> <span id="api-link-text">FUENTE API STAR ATLAS</span>
                         </a>
@@ -122,7 +107,7 @@
                             <button onclick="changeLang('en')" class="text-[9px] font-bold text-blue-400 hover:text-white px-1.5">EN</button>
                         </div>
                         
-                        <div class="text-right group relative cursor-help">
+                        <div id="multiplier-container" class="text-right group relative cursor-help">
                             <p id="label-multiplier" class="text-[7px] md:text-[9px] text-slate-500 uppercase font-bold tracking-widest leading-none">Multiplicador de Tiempo</p>
                             <p id="multiplier" class="text-sm md:text-xl font-header leading-none text-white">--</p>
                             
@@ -131,7 +116,7 @@
                             </div>
                         </div>
                     </div>
-                    <a href="https://holosim.staratlas.com/" target="_blank" class="btn-execute px-4 py-2 md:px-6 md:py-2 rounded-sm text-[9px] md:text-[10px] font-header tracking-widest text-blue-400 uppercase">
+                    <a href="https://holosim.staratlas.com/" target="_blank" class="btn-execute px-4 py-2 md:px-6 md:py-2 rounded-sm text-[9px] md:text-[10px] font-header tracking-widest text-blue-400 uppercase transition-all hover:bg-blue-500/20">
                         GO HOLOSIM
                     </a>
                 </div>
@@ -140,7 +125,9 @@
 
         <div id="mobile-tabs-container" class="mobile-tabs flex gap-1 mb-3"></div>
 
-        <div id="container" class="flex flex-col md:flex-row gap-3 md:gap-6 mb-2 md:mb-6 flex-grow overflow-hidden"></div>
+        <div id="container" class="flex flex-col md:flex-row gap-3 md:gap-6 mb-2 md:mb-6 flex-grow overflow-hidden">
+             <div class="w-full flex items-center justify-center font-header text-blue-500 animate-pulse">ESTABLISHING SECURE CONNECTION...</div>
+        </div>
 
         <footer class="mt-auto glass p-3 md:p-5 rounded-t-xl relative overflow-hidden">
             <div class="fuel-bar"></div>
@@ -190,25 +177,17 @@
 
         const i18n = {
             es: { 
-                dataLabel: "DATOS OFICIALES DEL:", 
-                apiLink: "FUENTE API STAR ATLAS",
-                footerRole: "Miembro Directivo // Quimera Guild", 
-                communityText: "Creado para la comunidad", 
-                btnTip: "Propina Operativa", 
-                sectorControl: "Control de Sector",
-                followQuimera: "Sigue a Quimera:",
-                timeMultiplier: "Multiplicador de Tiempo",
+                dataLabel: "DATOS OFICIALES DEL:", apiLink: "FUENTE API STAR ATLAS",
+                footerRole: "Miembro Directivo // Quimera Guild", communityText: "Creado para la comunidad", 
+                btnTip: "Propina Operativa", sectorControl: "Control de Sector",
+                followQuimera: "Sigue a Quimera:", timeMultiplier: "Multiplicador de Tiempo",
                 tooltip: "Este valor corresponde al campo \"timeMultiplier\" de la API original. Indica el factor de velocidad de cálculo de puntos en la simulación."
             },
             en: { 
-                dataLabel: "OFFICIAL DATA FROM:", 
-                apiLink: "STAR ATLAS API SOURCE",
-                footerRole: "Executive Member // Quimera Guild", 
-                communityText: "Created for the community", 
-                btnTip: "Support Project", 
-                sectorControl: "Sector Control",
-                followQuimera: "Follow Quimera:",
-                timeMultiplier: "Time Multiplier",
+                dataLabel: "OFFICIAL DATA FROM:", apiLink: "STAR ATLAS API SOURCE",
+                footerRole: "Executive Member // Quimera Guild", communityText: "Created for the community", 
+                btnTip: "Support Project", sectorControl: "Sector Control",
+                followQuimera: "Follow Quimera:", timeMultiplier: "Time Multiplier",
                 tooltip: "This value corresponds to the \"timeMultiplier\" field from the original API. It indicates the speed factor for point calculation in the simulation."
             }
         };
@@ -223,7 +202,6 @@
             document.getElementById('follow-text').innerText = i18n[lang].followQuimera;
             document.getElementById('label-multiplier').innerText = i18n[lang].timeMultiplier;
             document.getElementById('tooltip-text').innerText = i18n[lang].tooltip;
-            
             loadData();
         }
 
@@ -233,16 +211,17 @@
                 const res = await fetch(API_ORIGINAL);
                 if(res.ok) data = await res.json();
             } catch (e) {}
+            
             if (!data) {
                 try {
                     const res = await fetch(PROXY_RAPIDO);
                     if(res.ok) data = await res.json();
                 } catch (e) {
-                    document.getElementById('data-age').innerText = "SYSTEM ERROR";
+                    document.getElementById('data-age').innerText = "CONNECTION ERROR";
                     return;
                 }
             }
-            if (data) render(data);
+            if (data && data.factions) render(data);
         }
 
         function showTab(faction) {
@@ -278,22 +257,21 @@
                 const colorBtn = key === 'mud' ? 'text-red-500' : (key === 'oni' ? 'text-blue-500' : 'text-yellow-500');
                 tabsCont.innerHTML += `
                     <button onclick="showTab('${key}')" id="btn-${key}" 
-                            class="flex-1 py-2 glass text-[10px] font-header ${colorBtn} transition-all">
-                        ${key.toUpperCase()}
+                            class="flex-1 py-2 glass text-[10px] font-header ${colorBtn} transition-all uppercase">
+                        ${key}
                     </button>
                 `;
             });
 
             sortedFactions.forEach(([key, f], index) => {
                 const isLeader = index === 0;
-                const rank = index + 1;
                 const colorClass = key === 'mud' ? 'text-red-500' : (key === 'oni' ? 'text-blue-500' : 'text-yellow-400');
                 const bgRank = key === 'mud' ? 'bg-red-500/80' : (key === 'oni' ? 'bg-blue-500/80' : 'bg-yellow-500/80');
 
                 cont.innerHTML += `
                     <div id="tab-${key}" class="tab-content flex-1 ${key === activeTab ? 'active' : ''}">
                         <div class="card-wrapper">
-                            <div class="rank-tag ${bgRank} text-black font-header">RANK #${rank}</div>
+                            <div class="rank-tag ${bgRank} text-black font-header uppercase">RANK #${index + 1}</div>
                             <div class="glass p-3 md:p-5 rounded-lg neon-card ${key}-card flex flex-col h-full ${isLeader ? 'leader-glow' : ''}">
                                 <div class="flex justify-between items-start mb-2 md:mb-4">
                                     <div>
@@ -308,7 +286,9 @@
                                 <div class="space-y-1 md:space-y-2 overflow-y-auto pr-1 flex-grow scroll-thin">
                                     ${f.starbases.sort((a,b) => b.level - a.level).map(sb => `
                                         <div class="flex justify-between items-center border-b border-white/5 pb-1">
-                                            <span class="text-[9px] md:text-[10px] text-slate-400 font-bold uppercase truncate mr-2">${sb.name}</span>
+                                            <span class="text-[9px] md:text-[10px] text-slate-400 font-bold uppercase truncate mr-2">
+                                                ${sb.name.replace(/_/g, ' ')}
+                                            </span>
                                             <div class="flex items-center gap-2 shrink-0">
                                                 <span class="text-[7px] md:text-[8px] bg-white/5 px-1 rounded text-slate-300">L${sb.level}</span>
                                                 <span class="${colorClass} font-bold text-[9px] md:text-[10px]">${sb.points.toFixed(1)}</span>
@@ -321,12 +301,11 @@
                     </div>
                 `;
             });
-
             showTab(activeTab);
         }
 
         loadData();
-        setInterval(loadData, 60000);
+        setInterval(loadData, 60000); // Sincronización automática cada 60 segundos
     </script>
 </body>
 </html>
