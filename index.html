@@ -27,17 +27,14 @@
             
             <div class="text-right relative group">
                 <p class="text-[9px] text-slate-500 uppercase font-bold flex items-center justify-end gap-1 cursor-help">
-                    Ritmo de Temporada <i class="fa-solid fa-circle-info text-[10px] opacity-50"></i>
+                    Time Multiplier <i class="fa-solid fa-circle-info text-[10px] opacity-50"></i>
                 </p>
-                <div class="flex items-center justify-end gap-2">
-                    <i class="fa-solid fa-gauge-high text-blue-500/40 text-xs"></i>
-                    <p id="multiplier" class="text-lg font-header leading-none">--</p>
-                </div>
+                <p id="multiplier" class="text-lg font-header leading-none">--</p>
 
-                <div class="absolute right-0 top-10 w-64 p-3 glass bg-[#0f172a] border border-blue-500/30 rounded shadow-2xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50 text-left">
-                    <p class="text-[10px] text-blue-400 font-bold uppercase mb-1 tracking-widest font-header">Protocolo de Aceleración</p>
-                    <p class="text-[11px] text-slate-300 leading-relaxed">
-                        Este valor multiplica la generación base de puntos. Un valor de <span class="text-white">1.000x</span> es el ritmo normal. A medida que avanza la temporada, este número sube para acelerar la competición.
+                <div class="absolute right-0 top-10 w-64 p-3 glass border border-blue-500/20 rounded shadow-2xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50 text-left">
+                    <p class="text-[10px] text-blue-400 font-bold uppercase mb-1 tracking-widest">Dato Técnico</p>
+                    <p class="text-[11px] text-slate-300 leading-relaxed italic">
+                        Este valor corresponde al campo "timeMultiplier" de la API original. Indica el factor de velocidad de cálculo de puntos en la simulación.
                     </p>
                 </div>
             </div>
@@ -48,7 +45,7 @@
 
         <footer class="mt-12 text-center border-t border-white/5 pt-6">
             <p class="text-slate-600 text-[10px] uppercase tracking-[0.3em]">Official API Feed • Verified Records</p>
-            <p class="text-slate-400 text-xs mt-2">Developed by <span class="text-white font-bold tracking-tighter uppercase text-nowrap">TuNombre @ QUIMERA</span></p>
+            <p class="text-slate-400 text-xs mt-2">Developed by <span class="text-white font-bold tracking-tighter uppercase">TuNombre @ QUIMERA</span></p>
         </footer>
     </div>
 
@@ -58,6 +55,7 @@
 
         async function loadData() {
             let data = null;
+            
             try {
                 const res = await fetch(API_ORIGINAL);
                 if(res.ok) data = await res.json();
@@ -74,13 +72,14 @@
                     return;
                 }
             }
+
             if (data) render(data);
         }
 
         function render(data) {
             const date = new Date(data.timestamp);
             document.getElementById('data-age').innerText = "DATOS OFICIALES DEL: " + date.toLocaleString();
-            document.getElementById('multiplier').innerText = data.timeMultiplier.toFixed(4) + "x";
+            document.getElementById('multiplier').innerText = data.timeMultiplier.toFixed(4);
 
             const cont = document.getElementById('container');
             cont.innerHTML = '';
