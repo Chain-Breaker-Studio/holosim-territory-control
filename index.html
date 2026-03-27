@@ -35,11 +35,10 @@
             border-radius: 8px;
         }
 
-        /* CORRECCIÓN DE COLORES POR FACCION */
-        .mud-card::after { background: #ef4444; } /* MUD ROJO */
-        .oni-card::after { background: #3b82f6; } /* ONI AZUL */
-        .ustur-card::after { background: #facc15; } /* USTUR AMARILLO */
-
+        /* COLORES FACCIONES */
+        .mud-card::after { background: #ef4444; }
+        .oni-card::after { background: #3b82f6; }
+        .ustur-card::after { background: #facc15; }
         .mud-card { border-left: 4px solid #ef4444; }
         .oni-card { border-left: 4px solid #3b82f6; }
         .ustur-card { border-left: 4px solid #facc15; }
@@ -56,7 +55,8 @@
 
         @media (max-width: 767px) {
             body { overflow-y: auto; height: auto; }
-            .mobile-compact { padding: 0.5rem !important; margin-bottom: 0.5rem !important; }
+            .mobile-header-stack { flex-direction: column !important; align-items: center !important; text-align: center !important; }
+            .mobile-hide { display: none; }
         }
 
         .tab-content { display: none; }
@@ -78,51 +78,52 @@
 
     <div class="max-w-6xl mx-auto w-full flex flex-col h-full overflow-hidden">
         
-        <header class="mobile-compact mb-2 md:mb-6 flex flex-row justify-between items-center border-b border-blue-500/20 pb-2 md:pb-4">
-            <div class="flex flex-col">
+        <header class="mb-4 md:mb-6 flex flex-col md:flex-row justify-between md:items-center border-b border-blue-500/20 pb-4">
+            <div class="flex flex-col items-center md:items-start mb-4 md:mb-0">
                 <div class="flex items-center gap-2">
                     <div class="dot-pulse"></div>
                     <h1 class="font-header text-lg md:text-2xl font-bold uppercase tracking-tighter text-blue-500">
                         HOLOSIM | <span class="text-white">SECTOR DOMINANCE ANALYTICS</span>
                     </h1>
                 </div>
-                <div class="flex flex-col md:flex-row md:items-center gap-1 md:gap-3">
-                    <p id="data-label" class="text-[8px] md:text-[10px] font-bold text-slate-500 uppercase tracking-widest leading-none italic">DATOS OFICIALES DEL:</p>
-                    <p id="data-age" class="text-[8px] md:text-[10px] font-bold text-blue-400 uppercase leading-none">Iniciando...</p>
+                <div class="flex flex-wrap justify-center md:justify-start items-center gap-2 mt-1">
+                    <p id="data-label" class="text-[8px] md:text-[10px] font-bold text-slate-500 uppercase italic">DATOS OFICIALES DEL:</p>
+                    <p id="data-age" class="text-[8px] md:text-[10px] font-bold text-blue-400 uppercase">Cargando...</p>
+                    <span class="text-slate-700 hidden md:block">|</span>
                     <a href="https://holosim-galaxy.staratlas.com/territory-control" target="_blank" class="text-[8px] md:text-[9px] text-blue-400/40 hover:text-blue-400 font-bold uppercase tracking-tighter">
-                        <i class="fa-solid fa-link text-[7px]"></i> API STAR ATLAS
+                        <i class="fa-solid fa-link text-[7px]"></i> FUENTE API
                     </a>
                 </div>
             </div>
             
-            <div class="flex items-center gap-2 md:gap-6">
-                <div class="flex gap-1">
-                    <button onclick="changeLang('es')" class="text-[9px] font-bold text-blue-400 hover:text-white px-1 border border-blue-500/20 rounded">ES</button>
-                    <button onclick="changeLang('en')" class="text-[9px] font-bold text-blue-400 hover:text-white px-1 border border-blue-500/20 rounded">EN</button>
-                </div>
-                
-                <div class="text-right group relative cursor-help">
-                    <p class="text-[7px] md:text-[9px] text-slate-500 uppercase font-bold tracking-widest leading-none">Time Mult.</p>
-                    <p id="multiplier" class="text-sm md:text-xl font-header leading-none text-white">--</p>
-                    <div class="absolute right-0 top-10 w-48 p-2 glass text-[9px] text-slate-300 opacity-0 group-hover:opacity-100 transition-opacity z-50 pointer-events-none border border-blue-500/30">
-                        <p id="tooltip-text">Este valor corresponde al campo "timeMultiplier" de la API original. Indica el factor de velocidad de cálculo de puntos en la simulación.</p>
+            <div class="flex items-center justify-between md:justify-end gap-4 md:gap-6 w-full md:w-auto px-2 md:px-0">
+                <div class="flex flex-col md:flex-row items-center gap-2 md:gap-4">
+                    <div class="flex gap-1 bg-white/5 p-1 rounded border border-white/10">
+                        <button onclick="changeLang('es')" class="text-[8px] font-bold text-blue-400 hover:text-white px-1.5 transition-colors">ES</button>
+                        <button onclick="changeLang('en')" class="text-[8px] font-bold text-blue-400 hover:text-white px-1.5 transition-colors">EN</button>
+                    </div>
+                    <div class="text-center md:text-right group relative cursor-help">
+                        <p class="text-[7px] md:text-[9px] text-slate-500 uppercase font-bold tracking-widest leading-none">Time Mult.</p>
+                        <p id="multiplier" class="text-sm md:text-xl font-header leading-none text-white">--</p>
+                        <div class="absolute right-0 top-10 w-48 p-2 glass text-[9px] text-slate-300 opacity-0 group-hover:opacity-100 transition-opacity z-50 pointer-events-none border border-blue-500/30 text-left">
+                            <p id="tooltip-text">Factor de velocidad de cálculo de puntos en la simulación.</p>
+                        </div>
                     </div>
                 </div>
                 
-                <a href="https://holosim.staratlas.com/" target="_blank" class="btn-execute px-3 py-1 md:px-6 md:py-2 rounded-sm text-[8px] md:text-[10px] font-header tracking-widest text-blue-400 uppercase">
+                <a href="https://holosim.staratlas.com/" target="_blank" class="btn-execute px-4 py-2 md:px-6 md:py-2 rounded-sm text-[9px] md:text-[10px] font-header tracking-widest text-blue-400 uppercase">
                     GO HOLOSIM
                 </a>
             </div>
         </header>
 
-        <div class="mobile-tabs flex gap-1 mb-2">
-            <button onclick="showTab('mud')" id="btn-mud" class="flex-1 py-1 glass text-[9px] font-header text-red-500 border-b-2 border-red-500">MUD</button>
-            <button onclick="showTab('oni')" id="btn-oni" class="flex-1 py-1 glass text-[9px] font-header text-blue-500 opacity-50">ONI</button>
-            <button onclick="showTab('ustur')" id="btn-ustur" class="flex-1 py-1 glass text-[9px] font-header text-yellow-500 opacity-50">USTUR</button>
+        <div class="mobile-tabs flex gap-1 mb-3">
+            <button onclick="showTab('mud')" id="btn-mud" class="flex-1 py-2 glass text-[10px] font-header text-red-500 border-b-2 border-red-500">MUD</button>
+            <button onclick="showTab('oni')" id="btn-oni" class="flex-1 py-2 glass text-[10px] font-header text-blue-500 opacity-50">ONI</button>
+            <button onclick="showTab('ustur')" id="btn-ustur" class="flex-1 py-2 glass text-[10px] font-header text-yellow-500 opacity-50">USTUR</button>
         </div>
 
-        <div id="container" class="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-6 mb-2 md:mb-6 flex-grow overflow-hidden">
-            </div>
+        <div id="container" class="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-6 mb-2 md:mb-6 flex-grow overflow-hidden"></div>
 
         <footer class="mt-auto glass p-3 md:p-5 rounded-t-xl relative overflow-hidden">
             <div class="fuel-bar"></div>
@@ -135,7 +136,7 @@
                     <div>
                         <div class="flex items-center gap-2">
                             <p class="text-white font-header text-xs tracking-wider uppercase leading-none">Daenerys84</p>
-                            <a href="https://x.com/Daenerys_084" target="_blank" class="text-blue-400 text-[10px] hover:text-white"><i class="fa-brands fa-x-twitter"></i></a>
+                            <a href="https://x.com/Daenerys_084" target="_blank" class="text-blue-400 text-[10px] hover:text-white transition-all"><i class="fa-brands fa-x-twitter"></i></a>
                         </div>
                         <p id="footer-role" class="text-blue-500/60 uppercase text-[8px] font-bold mt-1 tracking-tighter">Miembro Directivo // Quimera Guild</p>
                     </div>
@@ -143,14 +144,14 @@
 
                 <div class="flex flex-col items-center">
                     <a href="https://ko-fi.com/chainbreaker" target="_blank" class="px-5 py-1.5 bg-amber-500/5 border border-amber-500/30 rounded text-amber-500 font-header text-[9px] tracking-widest uppercase hover:bg-amber-500/10 transition-all flex items-center gap-2">
-                        <i class="fa-solid fa-heart text-[8px]"></i> <span id="btn-tip">Propina Operativa</span>
+                        <i class="fa-solid fa-bolt text-[8px]"></i> <span id="btn-tip">Propina Operativa</span>
                     </a>
                     <p id="community-text" class="text-[7px] text-slate-500 uppercase mt-1 tracking-[0.2em]">Creado para la comunidad</p>
                 </div>
 
-                <div class="flex items-center gap-4 border-l border-white/5 pl-4">
-                    <p class="text-[8px] text-slate-500 font-bold uppercase tracking-widest">Quimera Guild:</p>
-                    <div class="flex gap-3 text-slate-400">
+                <div class="flex items-center gap-4 border-t md:border-t-0 md:border-l border-white/10 pt-3 md:pt-0 md:pl-4">
+                    <p class="text-[8px] text-slate-500 font-bold uppercase tracking-widest">Sigue a Quimera:</p>
+                    <div class="flex gap-4 text-slate-400">
                         <a href="https://x.com/QuimeraSA_" target="_blank" class="hover:text-white transition-colors"><i class="fa-brands fa-x-twitter"></i></a>
                         <a href="https://discord.gg/aVM5KjMeB6" target="_blank" class="hover:text-indigo-400 transition-colors"><i class="fa-brands fa-discord"></i></a>
                     </div>
@@ -191,7 +192,7 @@
             document.getElementById('community-text').innerText = i18n[lang].communityText;
             document.getElementById('btn-tip').innerText = i18n[lang].btnTip;
             document.getElementById('tooltip-text').innerText = i18n[lang].tooltip;
-            loadData(); // Re-renderizar para actualizar textos en tarjetas
+            loadData();
         }
 
         async function loadData() {
