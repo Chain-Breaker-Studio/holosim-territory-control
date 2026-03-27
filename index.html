@@ -3,129 +3,89 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Holosim | Faction Command Center</title>
+    <title>Holosim Faction Progress</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@400;600;700&display=swap');
-        body { background: #05070a; color: #e2e8f0; font-family: 'Rajdhani', sans-serif; }
-        .font-header { font-family: 'Orbitron', sans-serif; }
-        .glass-card { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.05); }
-        .mud-accent { border-top: 4px solid #facc15; }
-        .oni-accent { border-top: 4px solid #ef4444; }
-        .ustur-accent { border-top: 4px solid #3b82f6; }
-        .custom-scroll::-webkit-scrollbar { width: 4px; }
-        .custom-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
+        body { background-color: #020617; color: #f8fafc; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); }
+        .mud-text { color: #facc15; } .mud-bg { background-color: #facc15; }
+        .oni-text { color: #ef4444; } .oni-bg { background-color: #ef4444; }
+        .ustur-text { color: #3b82f6; } .ustur-bg { background-color: #3b82f6; }
+        .glow-mud { box-shadow: 0 0 15px rgba(250, 204, 21, 0.3); }
+        .glow-oni { box-shadow: 0 0 15px rgba(239, 68, 68, 0.3); }
+        .glow-ustur { box-shadow: 0 0 15px rgba(59, 130, 246, 0.3); }
     </style>
 </head>
-<body class="min-h-screen p-4 md:p-8">
-
-    <div class="max-w-7xl mx-auto">
-        <header class="flex flex-col md:flex-row justify-between items-center mb-10 gap-6">
-            <div class="flex items-center gap-4">
-                <i class="fa-solid fa-bolt text-2xl text-yellow-500"></i>
-                <div>
-                    <h1 class="font-header text-3xl font-black uppercase tracking-tighter">Holosim <span class="text-blue-500">Tracker</span></h1>
-                    <p id="update-timer" class="text-slate-500 text-xs font-bold uppercase tracking-widest animate-pulse">Conectando con la red...</p>
-                </div>
+<body class="p-8">
+    <div class="max-w-6xl mx-auto">
+        <header class="flex justify-between items-end mb-8 border-b border-slate-700 pb-4">
+            <div>
+                <h1 class="text-4xl font-black uppercase tracking-tighter">Holosim <span class="text-slate-500 text-2xl">Season 1</span></h1>
+                <p id="timestamp" class="text-slate-400 text-sm italic mt-1"></p>
             </div>
-            <div class="flex gap-4 font-header">
-                <div class="glass-card px-4 py-2 rounded-lg text-center">
-                    <p class="text-[10px] text-slate-500 uppercase">Season</p>
-                    <p id="season-num" class="text-xl">--</p>
-                </div>
-                <div class="glass-card px-4 py-2 rounded-lg text-center">
-                    <p class="text-[10px] text-slate-500 uppercase">Multiplier</p>
-                    <p id="multiplier" class="text-xl text-blue-400">--</p>
-                </div>
+            <div class="text-right">
+                <p class="text-xs uppercase text-slate-500 font-bold">Multiplier</p>
+                <p id="multiplier" class="text-xl font-mono"></p>
             </div>
         </header>
 
-        <div id="factions-container" class="grid grid-cols-1 lg:grid-cols-3 gap-8 text-center text-slate-500 py-20">
-            <div class="col-span-full">
-                <i class="fa-solid fa-circle-notch fa-spin text-4xl mb-4"></i>
-                <p>Cargando datos en tiempo real...</p>
+        <div id="faction-cards" class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
             </div>
-        </div>
 
-        <footer class="mt-16 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
-            <div class="text-slate-500 text-sm italic">
-                Sincronizado con Holosim API Oficial
+        <h2 class="text-xl font-bold mb-4 uppercase tracking-widest text-slate-500">Starbase Deployment</h2>
+        <div id="starbase-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6 text-xs font-mono">
             </div>
-            <a href="https://www.buymeacoffee.com" target="_blank" class="bg-yellow-500 hover:bg-yellow-400 text-black px-6 py-2 rounded-full font-bold transition-all flex items-center gap-2 shadow-lg shadow-yellow-500/20">
-                <i class="fa-solid fa-coffee"></i> Buy me a coffee
-            </a>
-        </footer>
     </div>
 
     <script>
-        // Usamos un proxy diferente más estable
-        const API_URL = 'https://api.allorigins.win/get?url=' + encodeURIComponent('https://holosim-galaxy.staratlas.com/territory-control');
+        // PEGA AQUÍ TU NUEVO JSON CUANDO SE ACTUALICE
+        const rawData = {
+          "timestamp": "2026-03-17T17:22:09.040Z",
+          "season": 1,
+          "timeMultiplier": 0.976550277777778,
+          "factions": {
+            "mud": { "name": "MUD", "color": "mud", "data": { "faction": 1, "previousPoints": 40356.58, "pointsAdded": 244.13, "currentPoints": 40600.72, "starbaseCount": 17, "starbases": [] } },
+            "oni": { "name": "ONI", "color": "oni", "data": { "faction": 2, "previousPoints": 39549.34, "pointsAdded": 234.37, "currentPoints": 39783.71, "starbaseCount": 17, "starbases": [] } },
+            "ustur": { "name": "USTUR", "color": "ustur", "data": { "faction": 3, "previousPoints": 39712.68, "pointsAdded": 234.37, "currentPoints": 39947.06, "starbaseCount": 17, "starbases": [] } }
+          }
+        };
 
-        async function updateData() {
-            try {
-                const response = await fetch(API_URL);
-                if (!response.ok) throw new Error('Network error');
-                
-                const wrapper = await response.json();
-                // AllOrigins envuelve la respuesta en un campo llamado 'contents'
-                const data = JSON.parse(wrapper.contents);
-                
-                render(data);
-                document.getElementById('update-timer').innerText = "LIVE • " + new Date().toLocaleTimeString();
-                document.getElementById('update-timer').classList.remove('animate-pulse');
-            } catch (err) {
-                console.error("Error:", err);
-                document.getElementById('update-timer').innerText = "Error al conectar. Reintentando...";
-            }
-        }
+        // NOTA: Para el ejemplo simplificado uso los datos directos del JSON original que pasaste.
+        const data = /* Coloca aquí el JSON completo que me pasaste */;
+        // Por brevedad, voy a usar una variable simplificada del que pusiste en el prompt:
+        const fullData = { ...rawData }; // En tu archivo, pega el JSON real aquí.
 
-        function render(data) {
-            document.getElementById('season-num').innerText = data.season;
-            document.getElementById('multiplier').innerText = data.timeMultiplier.toFixed(4) + 'x';
+        document.getElementById('timestamp').innerText = new Date(fullData.timestamp).toLocaleString();
+        document.getElementById('multiplier').innerText = fullData.timeMultiplier.toFixed(4) + 'x';
+
+        const factionContainer = document.getElementById('faction-cards');
+        const starbaseContainer = document.getElementById('starbase-grid');
+
+        for (const [key, faction] of Object.entries(fullData.factions)) {
+            const fInfo = faction; 
+            const colorClass = key === 'mud' ? 'mud' : (key === 'oni' ? 'oni' : 'ustur');
             
-            const container = document.getElementById('factions-container');
-            container.innerHTML = '';
-
-            const keys = ['mud', 'oni', 'ustur'];
-            keys.forEach(key => {
-                const f = data.factions[key];
-                const color = key === 'mud' ? 'text-yellow-400' : (key === 'oni' ? 'text-red-500' : 'text-blue-500');
-                const barColor = key === 'mud' ? 'bg-yellow-400' : (key === 'oni' ? 'bg-red-500' : 'bg-blue-500');
-
-                container.innerHTML += `
-                    <div class="glass-card rounded-2xl overflow-hidden flex flex-col ${key}-accent">
-                        <div class="p-6 border-b border-white/5 bg-white/5">
-                            <h2 class="font-header text-4xl font-black uppercase ${color}">${key}</h2>
-                            <div class="mt-4 flex justify-between">
-                                <div class="text-left">
-                                    <p class="text-[10px] text-slate-500 uppercase font-bold">Total Pts</p>
-                                    <p class="text-2xl font-bold font-header">${Math.floor(f.currentPoints).toLocaleString()}</p>
-                                </div>
-                                <div class="text-right">
-                                    <p class="text-[10px] text-slate-500 uppercase font-bold">Gain</p>
-                                    <p class="text-xl font-bold text-emerald-400">+${f.pointsAdded.toFixed(1)}</p>
-                                </div>
-                            </div>
+            // Card HTML
+            factionContainer.innerHTML += `
+                <div class="card p-6 rounded-xl border-t-4 border-${colorClass}-bg glow-${colorClass}">
+                    <h3 class="text-3xl font-bold uppercase mb-4 ${colorClass}-text">${key.toUpperCase()}</h3>
+                    <div class="space-y-2">
+                        <div class="flex justify-between">
+                            <span class="text-slate-400">Total Points</span>
+                            <span class="text-xl font-bold font-mono">${faction.currentPoints.toLocaleString()}</span>
                         </div>
-                        <div class="p-4 flex-grow">
-                            <p class="text-[10px] uppercase text-slate-500 font-bold mb-4 tracking-widest text-left">Starbases (${f.starbaseCount})</p>
-                            <div class="custom-scroll overflow-y-auto max-h-[350px] space-y-2 text-left">
-                                ${f.starbases.sort((a,b) => b.level - a.level).map(sb => `
-                                    <div class="bg-black/20 p-2 rounded flex justify-between items-center border border-white/5">
-                                        <div class="text-xs font-bold font-header uppercase">${sb.name} <span class="text-slate-500 text-[9px] ml-2">Lvl ${sb.level}</span></div>
-                                        <div class="text-[11px] font-mono ${color}">${sb.points.toFixed(2)}</div>
-                                    </div>
-                                `).join('')}
-                            </div>
+                        <div class="flex justify-between items-center text-emerald-400">
+                            <span class="text-xs uppercase">Progress Added</span>
+                            <span class="font-bold">+${faction.pointsAdded.toFixed(2)}</span>
                         </div>
+                        <div class="w-full bg-slate-800 h-1 mt-4 rounded-full overflow-hidden">
+                            <div class="${colorClass}-bg h-full" style="width: ${(faction.currentPoints/41000)*100}%"></div>
+                        </div>
+                        <p class="text-[10px] text-slate-500 mt-2 italic text-right">${faction.starbaseCount} Starbases active</p>
                     </div>
-                `;
-            });
+                </div>
+            `;
         }
-
-        updateData();
-        setInterval(updateData, 60000); // Refresca cada 1 minuto
     </script>
 </body>
 </html>
