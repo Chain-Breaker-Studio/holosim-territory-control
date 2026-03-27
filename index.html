@@ -8,163 +8,80 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@500;700&display=swap');
-        
-        :root {
-            --neon-blue: #3b82f6;
-            --neon-amber: #f59e0b;
-        }
-
-        /* Forzamos que el cuerpo ocupe el 100% de la pantalla sin scroll en PC */
-        body { 
-            background: #010204; color: #e2e8f0; font-family: 'Rajdhani', sans-serif; 
-            overflow: hidden; height: 100vh; margin: 0; padding: 0;
-        }
+        body { background: #020408; color: #e2e8f0; font-family: 'Rajdhani', sans-serif; }
         .font-header { font-family: 'Orbitron', sans-serif; }
-        
-        body::before {
-            content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-image: linear-gradient(rgba(59, 130, 246, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(59, 130, 246, 0.03) 1px, transparent 1px);
-            background-size: 20px 20px; z-index: -1;
-        }
-
-        .glass { background: rgba(7, 10, 15, 0.85); border: 1px solid rgba(59, 130, 246, 0.1); backdrop-filter: blur(10px); }
-        
-        .neon-card { position: relative; height: 100%; border-radius: 8px; }
-        .neon-card::after {
-            content: ""; position: absolute; inset: -1px; 
-            z-index: -1; filter: blur(10px); opacity: 0.15;
-            border-radius: 8px;
-        }
-
-        .mud-card::after { background: #facc15; }
-        .oni-card::after { background: #ef4444; }
-        .ustur-card::after { background: #3b82f6; }
-
+        .glass { background: rgba(15, 23, 42, 0.9); border: 1px solid rgba(255,255,255,0.05); }
         .mud-card { border-left: 4px solid #facc15; }
         .oni-card { border-left: 4px solid #ef4444; }
         .ustur-card { border-left: 4px solid #3b82f6; }
-
-        .btn-execute {
-            background: rgba(59, 130, 246, 0.1); border: 1px solid var(--neon-blue);
-            box-shadow: 0 0 10px rgba(59, 130, 246, 0.2);
-        }
-
-        .fuel-bar {
-            background: linear-gradient(90deg, var(--neon-amber) 0%, transparent 100%);
-            height: 2px; width: 100%; position: absolute; bottom: 0; left: 0;
-        }
-
-        /* Mobile specific adjustments */
-        @media (max-width: 767px) {
-            body { overflow-y: auto; height: auto; } /* En móvil permitimos scroll si es necesario */
-            .header-info { font-size: 0.75rem; }
-            .mobile-compact { padding: 0.5rem !important; margin-bottom: 0.5rem !important; }
-        }
-
-        .tab-content { display: none; }
-        .tab-content.active { display: flex; flex-direction: column; height: 100%; }
-        
-        @media (min-width: 768px) {
-            .tab-content { display: block !important; }
-            .mobile-tabs { display: none !important; }
-        }
     </style>
 </head>
-<body class="p-2 md:p-6 flex flex-col">
+<body class="p-4 md:p-8">
 
-    <div class="max-w-6xl mx-auto w-full flex flex-col h-full overflow-hidden">
-        <header class="mobile-compact mb-2 md:mb-6 flex flex-row justify-between items-center border-b border-blue-500/20 pb-2 md:pb-4">
-            <div class="flex flex-col">
-                <h1 class="font-header text-lg md:text-2xl font-bold uppercase tracking-tighter text-blue-500">Holosim <span class="text-white">Analytics</span></h1>
-                <p id="data-age" class="text-[8px] md:text-[10px] font-bold text-slate-500 uppercase tracking-widest leading-none italic">Iniciando sistemas...</p>
+    <div class="max-w-6xl mx-auto">
+        <header class="mb-8 flex justify-between items-end border-b border-white/10 pb-4">
+            <div>
+                <h1 class="font-header text-2xl font-bold uppercase tracking-tighter text-blue-500">Holosim <span class="text-white">Sector Dominance Analytics</span></h1>
+                <p id="data-age" class="text-[10px] font-bold text-slate-500 uppercase tracking-widest leading-none mt-1 italic">Sincronizando con la cadena...</p>
+                <a href="https://holosim-galaxy.staratlas.com/territory-control" target="_blank" class="text-[9px] text-blue-400/40 hover:text-blue-400 transition-colors flex items-center gap-1 mt-1.5 uppercase tracking-wider">
+                    <i class="fa-solid fa-link text-[8px]"></i> Fuente: API Star Atlas
+                </a>
             </div>
             
-            <div class="flex items-center gap-2 md:gap-6">
-                <div class="text-right">
-                    <p class="text-[7px] md:text-[9px] text-slate-500 uppercase font-bold tracking-widest leading-none">Time Mult.</p>
-                    <p id="multiplier" class="text-sm md:text-xl font-header leading-none text-white">--</p>
+            <div class="text-right relative group">
+                <p class="text-[9px] text-slate-500 uppercase font-bold flex items-center justify-end gap-1 cursor-help">
+                    Time Multiplier <i class="fa-solid fa-circle-info text-[10px] opacity-50"></i>
+                </p>
+                <p id="multiplier" class="text-lg font-header leading-none">--</p>
+
+                <div class="absolute right-0 top-10 w-64 p-3 glass border border-blue-500/20 rounded shadow-2xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50 text-left">
+                    <p class="text-[10px] text-blue-400 font-bold uppercase mb-1 tracking-widest">Dato Técnico</p>
+                    <p class="text-[11px] text-slate-300 leading-relaxed italic">
+                        Este valor corresponde al campo "timeMultiplier" de la API original. Indica el factor de velocidad de cálculo de puntos en la simulación.
+                    </p>
                 </div>
-                <a href="https://holosim.staratlas.com/" target="_blank" class="btn-execute px-3 py-1 md:px-6 md:py-2 rounded-sm text-[8px] md:text-[10px] font-header tracking-widest text-blue-400 uppercase">
-                    [ EXE ]
-                </a>
             </div>
         </header>
 
-        <div class="mobile-tabs flex gap-1 mb-2">
-            <button onclick="showTab('mud')" id="btn-mud" class="flex-1 py-1 glass text-[9px] font-header text-yellow-500 border-b-2 border-yellow-500">MUD</button>
-            <button onclick="showTab('oni')" id="btn-oni" class="flex-1 py-1 glass text-[9px] font-header text-red-500 opacity-50">ONI</button>
-            <button onclick="showTab('ustur')" id="btn-ustur" class="flex-1 py-1 glass text-[9px] font-header text-blue-500 opacity-50">USTUR</button>
+        <div id="container" class="grid grid-cols-1 md:grid-cols-3 gap-6">
         </div>
 
-        <div id="container" class="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-6 mb-2 md:mb-6 flex-grow overflow-hidden">
-            </div>
-
-        <footer class="mt-auto glass p-3 md:p-6 rounded-t-xl relative overflow-hidden">
-            <div class="fuel-bar"></div>
-            <div class="flex flex-row justify-between items-center gap-2">
-                <div class="flex items-center gap-2 md:gap-4">
-                    <div class="w-8 h-8 md:w-10 md:h-10 border border-blue-500/50 rounded-full flex items-center justify-center bg-blue-500/10">
-                        <i class="fa-solid fa-shield-halved text-blue-400 text-sm md:text-lg"></i>
-                    </div>
-                    <div>
-                        <p class="text-white font-header text-[10px] md:text-sm tracking-widest uppercase leading-none">Daenerys84</p>
-                        <p class="text-blue-500/60 uppercase text-[7px] md:text-[9px] font-bold">Chief Director</p>
-                    </div>
-                </div>
-
-                <a href="https://ko-fi.com/chainbreaker" target="_blank" class="px-3 py-1 md:px-6 md:py-2 bg-amber-500/5 border border-amber-500/30 rounded text-amber-500 font-header text-[8px] md:text-[10px] tracking-widest uppercase hover:bg-amber-500/10">
-                    Energizar
-                </a>
-
-                <div class="hidden md:flex gap-3 text-slate-500">
-                    <i class="fa-brands fa-x-twitter"></i>
-                    <i class="fa-brands fa-discord"></i>
-                </div>
-            </div>
+        <footer class="mt-12 text-center border-t border-white/5 pt-6">
+            <p class="text-slate-600 text-[10px] uppercase tracking-[0.3em]">Official API Feed • Verified Records</p>
+            <p class="text-slate-400 text-xs mt-2">Developed by <span class="text-white font-bold tracking-tighter uppercase">TuNombre @ QUIMERA</span></p>
         </footer>
     </div>
 
     <script>
         const API_ORIGINAL = 'https://holosim-galaxy.staratlas.com/territory-control';
         const PROXY_RAPIDO = `https://corsproxy.io/?${encodeURIComponent(API_ORIGINAL)}`;
-        let activeTab = 'mud';
 
         async function loadData() {
             let data = null;
+            
             try {
                 const res = await fetch(API_ORIGINAL);
                 if(res.ok) data = await res.json();
-            } catch (e) {}
+            } catch (e) {
+                console.log("CORS bloqueado, usando puente de alta velocidad...");
+            }
+
             if (!data) {
                 try {
                     const res = await fetch(PROXY_RAPIDO);
                     if(res.ok) data = await res.json();
                 } catch (e) {
-                    document.getElementById('data-age').innerText = "SYSTEM ERROR: CONNECTION LOST";
+                    document.getElementById('data-age').innerText = "ERROR DE CONEXIÓN";
                     return;
                 }
             }
-            if (data) render(data);
-        }
 
-        function showTab(faction) {
-            activeTab = faction;
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-            const target = document.getElementById(`tab-${faction}`);
-            if(target) target.classList.add('active');
-            
-            ['mud', 'oni', 'ustur'].forEach(f => {
-                const btn = document.getElementById(`btn-${f}`);
-                if(btn) {
-                    btn.style.opacity = f === faction ? "1" : "0.5";
-                    btn.style.borderBottom = f === faction ? `2px solid` : "none";
-                }
-            });
+            if (data) render(data);
         }
 
         function render(data) {
             const date = new Date(data.timestamp);
-            document.getElementById('data-age').innerText = "TERMINAL ACTUALIZADA: " + date.toLocaleTimeString();
+            document.getElementById('data-age').innerText = "DATOS OFICIALES DEL: " + date.toLocaleString();
             document.getElementById('multiplier').innerText = data.timeMultiplier.toFixed(4);
 
             const cont = document.getElementById('container');
@@ -172,29 +89,24 @@
 
             ['mud', 'oni', 'ustur'].forEach(key => {
                 const f = data.factions[key];
-                const colorClass = key === 'mud' ? 'text-yellow-400' : (key === 'oni' ? 'text-red-500' : 'text-blue-500');
+                const color = key === 'mud' ? 'yellow-400' : (key === 'oni' ? 'red-500' : 'blue-500');
                 
                 cont.innerHTML += `
-                    <div id="tab-${key}" class="tab-content ${key === activeTab ? 'active' : ''}">
-                        <div class="glass p-3 md:p-5 rounded-lg neon-card ${key}-card flex flex-col">
-                            <div class="flex justify-between items-start mb-2 md:mb-6">
-                                <h2 class="font-header text-xl md:text-2xl font-black uppercase ${colorClass}">${key}</h2>
-                                <div class="text-right leading-none">
-                                    <p class="text-lg md:text-xl font-bold font-header text-white">${Math.floor(f.currentPoints).toLocaleString()}</p>
-                                    <p class="text-[8px] md:text-[9px] text-emerald-400 font-bold uppercase">+${f.pointsAdded.toFixed(2)}</p>
+                    <div class="glass p-5 rounded-lg ${key}-card shadow-xl">
+                        <div class="flex justify-between items-center mb-6">
+                            <h2 class="font-header text-3xl font-black uppercase text-${color}">${key}</h2>
+                            <div class="text-right">
+                                <p class="text-xl font-bold font-header leading-none">${Math.floor(f.currentPoints).toLocaleString()}</p>
+                                <p class="text-[10px] text-emerald-400 font-bold uppercase">+${f.pointsAdded.toFixed(2)} pts</p>
+                            </div>
+                        </div>
+                        <div class="space-y-2">
+                            ${f.starbases.sort((a,b) => b.level - a.level).map(sb => `
+                                <div class="flex justify-between text-[11px] border-b border-white/5 pb-1">
+                                    <span class="text-slate-400 font-bold uppercase">${sb.name}</span>
+                                    <span class="text-${color}">L${sb.level} • ${sb.points.toFixed(1)}</span>
                                 </div>
-                            </div>
-                            <div class="space-y-1 md:space-y-2 overflow-y-auto pr-1">
-                                ${f.starbases.sort((a,b) => b.level - a.level).map(sb => `
-                                    <div class="flex justify-between items-center border-b border-white/5 pb-1">
-                                        <span class="text-[9px] md:text-[10px] text-slate-400 font-bold uppercase truncate mr-2">${sb.name}</span>
-                                        <div class="flex items-center gap-2 shrink-0">
-                                            <span class="text-[7px] md:text-[8px] bg-white/5 px-1 rounded text-slate-300">L${sb.level}</span>
-                                            <span class="${colorClass} font-bold text-[9px] md:text-[10px]">${sb.points.toFixed(1)}</span>
-                                        </div>
-                                    </div>
-                                `).join('')}
-                            </div>
+                            `).join('')}
                         </div>
                     </div>
                 `;
