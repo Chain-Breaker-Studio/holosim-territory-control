@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HOLOSIM | SECTOR DOMINANCE ANALYTICS</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@500;700&display=swap');
         
@@ -135,7 +135,9 @@
                     <div>
                         <div class="flex items-center gap-2">
                             <p class="text-white font-header text-xs tracking-wider uppercase leading-none">Daenerys84</p>
-                            <a href="https://x.com/Daenerys_084" target="_blank" class="text-blue-400 text-[10px] hover:text-white transition-all"><i class="fa-brands fa-x-twitter"></i></a>
+                            <a href="https://x.com/Daenerys_084" target="_blank" class="text-blue-400 text-[12px] hover:text-white transition-all">
+                                <i class="fa-brands fa-x-twitter"></i>
+                            </a>
                         </div>
                         <p id="footer-role" class="text-blue-500/60 uppercase text-[8px] font-bold mt-1 tracking-tighter">Miembro Directivo // Quimera Guild</p>
                     </div>
@@ -149,10 +151,14 @@
                 </div>
 
                 <div class="flex items-center gap-4 border-t md:border-t-0 md:border-l border-white/10 pt-3 md:pt-0 md:pl-4">
-                    <p class="text-[8px] text-slate-500 font-bold uppercase tracking-widest">Quimera Guild:</p>
+                    <p class="text-[8px] text-slate-500 font-bold uppercase tracking-widest">Sigue a Quimera:</p>
                     <div class="flex gap-4 text-slate-400">
-                        <a href="https://x.com/QuimeraSA_" target="_blank" class="hover:text-white transition-colors"><i class="fa-brands fa-x-twitter text-sm"></i></a>
-                        <a href="https://discord.gg/aVM5KjMeB6" target="_blank" class="hover:text-indigo-400 transition-colors"><i class="fa-brands fa-discord text-sm"></i></a>
+                        <a href="https://x.com/QuimeraSA_" target="_blank" class="hover:text-white transition-colors">
+                            <i class="fa-brands fa-x-twitter text-[14px]"></i>
+                        </a>
+                        <a href="https://discord.gg/aVM5KjMeB6" target="_blank" class="hover:text-indigo-400 transition-colors">
+                            <i class="fa-brands fa-discord text-[14px]"></i>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -166,22 +172,8 @@
         let currentLang = 'es';
 
         const i18n = {
-            es: {
-                dataLabel: "DATOS OFICIALES DEL:",
-                footerRole: "Miembro Directivo // Quimera Guild",
-                communityText: "Creado para la comunidad",
-                btnTip: "Propina Operativa",
-                tooltip: "Factor de velocidad de cálculo de puntos en la simulación.",
-                sectorControl: "Control de Sector"
-            },
-            en: {
-                dataLabel: "OFFICIAL DATA FROM:",
-                footerRole: "Executive Member // Quimera Guild",
-                communityText: "Created for the community",
-                btnTip: "Support Project",
-                tooltip: "Speed factor for point calculation in the simulation.",
-                sectorControl: "Sector Control"
-            }
+            es: { dataLabel: "DATOS OFICIALES DEL:", footerRole: "Miembro Directivo // Quimera Guild", communityText: "Creado para la comunidad", btnTip: "Propina Operativa", tooltip: "Factor de velocidad de cálculo de puntos en la simulación.", sectorControl: "Control de Sector" },
+            en: { dataLabel: "OFFICIAL DATA FROM:", footerRole: "Executive Member // Quimera Guild", communityText: "Created for the community", btnTip: "Support Project", tooltip: "Speed factor for point calculation in the simulation.", sectorControl: "Sector Control" }
         };
 
         function changeLang(lang) {
