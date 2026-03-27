@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Holosim | Sector Dominance Analytics</title>
+    <title>HOLOSIM | SECTOR DOMINANCE ANALYTICS</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -14,7 +14,6 @@
             --neon-amber: #f59e0b;
         }
 
-        /* Forzamos que el cuerpo ocupe el 100% de la pantalla sin scroll en PC */
         body { 
             background: #010204; color: #e2e8f0; font-family: 'Rajdhani', sans-serif; 
             overflow: hidden; height: 100vh; margin: 0; padding: 0;
@@ -36,13 +35,14 @@
             border-radius: 8px;
         }
 
-        .mud-card::after { background: #facc15; }
-        .oni-card::after { background: #ef4444; }
-        .ustur-card::after { background: #3b82f6; }
+        /* CORRECCIÓN DE COLORES POR FACCION */
+        .mud-card::after { background: #ef4444; } /* MUD ROJO */
+        .oni-card::after { background: #3b82f6; } /* ONI AZUL */
+        .ustur-card::after { background: #facc15; } /* USTUR AMARILLO */
 
-        .mud-card { border-left: 4px solid #facc15; }
-        .oni-card { border-left: 4px solid #ef4444; }
-        .ustur-card { border-left: 4px solid #3b82f6; }
+        .mud-card { border-left: 4px solid #ef4444; }
+        .oni-card { border-left: 4px solid #3b82f6; }
+        .ustur-card { border-left: 4px solid #facc15; }
 
         .btn-execute {
             background: rgba(59, 130, 246, 0.1); border: 1px solid var(--neon-blue);
@@ -54,10 +54,8 @@
             height: 2px; width: 100%; position: absolute; bottom: 0; left: 0;
         }
 
-        /* Mobile specific adjustments */
         @media (max-width: 767px) {
-            body { overflow-y: auto; height: auto; } /* En móvil permitimos scroll si es necesario */
-            .header-info { font-size: 0.75rem; }
+            body { overflow-y: auto; height: auto; }
             .mobile-compact { padding: 0.5rem !important; margin-bottom: 0.5rem !important; }
         }
 
@@ -68,57 +66,94 @@
             .tab-content { display: block !important; }
             .mobile-tabs { display: none !important; }
         }
+
+        .dot-pulse {
+            width: 8px; height: 8px; background: #3b82f6; border-radius: 50%;
+            box-shadow: 0 0 0 rgba(59, 130, 246, 0.4); animation: pulse 2s infinite;
+        }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(59, 130, 246, 0); } 100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); } }
     </style>
 </head>
 <body class="p-2 md:p-6 flex flex-col">
 
     <div class="max-w-6xl mx-auto w-full flex flex-col h-full overflow-hidden">
+        
         <header class="mobile-compact mb-2 md:mb-6 flex flex-row justify-between items-center border-b border-blue-500/20 pb-2 md:pb-4">
             <div class="flex flex-col">
-                <h1 class="font-header text-lg md:text-2xl font-bold uppercase tracking-tighter text-blue-500">Holosim <span class="text-white">Analytics</span></h1>
-                <p id="data-age" class="text-[8px] md:text-[10px] font-bold text-slate-500 uppercase tracking-widest leading-none italic">Iniciando sistemas...</p>
+                <div class="flex items-center gap-2">
+                    <div class="dot-pulse"></div>
+                    <h1 class="font-header text-lg md:text-2xl font-bold uppercase tracking-tighter text-blue-500">
+                        HOLOSIM | <span class="text-white">SECTOR DOMINANCE ANALYTICS</span>
+                    </h1>
+                </div>
+                <div class="flex flex-col md:flex-row md:items-center gap-1 md:gap-3">
+                    <p id="data-label" class="text-[8px] md:text-[10px] font-bold text-slate-500 uppercase tracking-widest leading-none italic">DATOS OFICIALES DEL:</p>
+                    <p id="data-age" class="text-[8px] md:text-[10px] font-bold text-blue-400 uppercase leading-none">Iniciando...</p>
+                    <a href="https://holosim-galaxy.staratlas.com/territory-control" target="_blank" class="text-[8px] md:text-[9px] text-blue-400/40 hover:text-blue-400 font-bold uppercase tracking-tighter">
+                        <i class="fa-solid fa-link text-[7px]"></i> API STAR ATLAS
+                    </a>
+                </div>
             </div>
             
             <div class="flex items-center gap-2 md:gap-6">
-                <div class="text-right">
+                <div class="flex gap-1">
+                    <button onclick="changeLang('es')" class="text-[9px] font-bold text-blue-400 hover:text-white px-1 border border-blue-500/20 rounded">ES</button>
+                    <button onclick="changeLang('en')" class="text-[9px] font-bold text-blue-400 hover:text-white px-1 border border-blue-500/20 rounded">EN</button>
+                </div>
+                
+                <div class="text-right group relative cursor-help">
                     <p class="text-[7px] md:text-[9px] text-slate-500 uppercase font-bold tracking-widest leading-none">Time Mult.</p>
                     <p id="multiplier" class="text-sm md:text-xl font-header leading-none text-white">--</p>
+                    <div class="absolute right-0 top-10 w-48 p-2 glass text-[9px] text-slate-300 opacity-0 group-hover:opacity-100 transition-opacity z-50 pointer-events-none border border-blue-500/30">
+                        <p id="tooltip-text">Este valor corresponde al campo "timeMultiplier" de la API original. Indica el factor de velocidad de cálculo de puntos en la simulación.</p>
+                    </div>
                 </div>
+                
                 <a href="https://holosim.staratlas.com/" target="_blank" class="btn-execute px-3 py-1 md:px-6 md:py-2 rounded-sm text-[8px] md:text-[10px] font-header tracking-widest text-blue-400 uppercase">
-                    [ EXE ]
+                    GO HOLOSIM
                 </a>
             </div>
         </header>
 
         <div class="mobile-tabs flex gap-1 mb-2">
-            <button onclick="showTab('mud')" id="btn-mud" class="flex-1 py-1 glass text-[9px] font-header text-yellow-500 border-b-2 border-yellow-500">MUD</button>
-            <button onclick="showTab('oni')" id="btn-oni" class="flex-1 py-1 glass text-[9px] font-header text-red-500 opacity-50">ONI</button>
-            <button onclick="showTab('ustur')" id="btn-ustur" class="flex-1 py-1 glass text-[9px] font-header text-blue-500 opacity-50">USTUR</button>
+            <button onclick="showTab('mud')" id="btn-mud" class="flex-1 py-1 glass text-[9px] font-header text-red-500 border-b-2 border-red-500">MUD</button>
+            <button onclick="showTab('oni')" id="btn-oni" class="flex-1 py-1 glass text-[9px] font-header text-blue-500 opacity-50">ONI</button>
+            <button onclick="showTab('ustur')" id="btn-ustur" class="flex-1 py-1 glass text-[9px] font-header text-yellow-500 opacity-50">USTUR</button>
         </div>
 
         <div id="container" class="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-6 mb-2 md:mb-6 flex-grow overflow-hidden">
             </div>
 
-        <footer class="mt-auto glass p-3 md:p-6 rounded-t-xl relative overflow-hidden">
+        <footer class="mt-auto glass p-3 md:p-5 rounded-t-xl relative overflow-hidden">
             <div class="fuel-bar"></div>
-            <div class="flex flex-row justify-between items-center gap-2">
-                <div class="flex items-center gap-2 md:gap-4">
-                    <div class="w-8 h-8 md:w-10 md:h-10 border border-blue-500/50 rounded-full flex items-center justify-center bg-blue-500/10">
-                        <i class="fa-solid fa-shield-halved text-blue-400 text-sm md:text-lg"></i>
+            <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+                
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 border border-blue-500/50 rounded-full flex items-center justify-center bg-blue-500/10">
+                        <i class="fa-solid fa-microchip text-blue-400 text-lg"></i>
                     </div>
                     <div>
-                        <p class="text-white font-header text-[10px] md:text-sm tracking-widest uppercase leading-none">Daenerys84</p>
-                        <p class="text-blue-500/60 uppercase text-[7px] md:text-[9px] font-bold">Chief Director</p>
+                        <div class="flex items-center gap-2">
+                            <p class="text-white font-header text-xs tracking-wider uppercase leading-none">Daenerys84</p>
+                            <a href="https://x.com/Daenerys_084" target="_blank" class="text-blue-400 text-[10px] hover:text-white"><i class="fa-brands fa-x-twitter"></i></a>
+                        </div>
+                        <p id="footer-role" class="text-blue-500/60 uppercase text-[8px] font-bold mt-1 tracking-tighter">Miembro Directivo // Quimera Guild</p>
                     </div>
                 </div>
 
-                <a href="https://ko-fi.com/chainbreaker" target="_blank" class="px-3 py-1 md:px-6 md:py-2 bg-amber-500/5 border border-amber-500/30 rounded text-amber-500 font-header text-[8px] md:text-[10px] tracking-widest uppercase hover:bg-amber-500/10">
-                    Energizar
-                </a>
+                <div class="flex flex-col items-center">
+                    <a href="https://ko-fi.com/chainbreaker" target="_blank" class="px-5 py-1.5 bg-amber-500/5 border border-amber-500/30 rounded text-amber-500 font-header text-[9px] tracking-widest uppercase hover:bg-amber-500/10 transition-all flex items-center gap-2">
+                        <i class="fa-solid fa-heart text-[8px]"></i> <span id="btn-tip">Propina Operativa</span>
+                    </a>
+                    <p id="community-text" class="text-[7px] text-slate-500 uppercase mt-1 tracking-[0.2em]">Creado para la comunidad</p>
+                </div>
 
-                <div class="hidden md:flex gap-3 text-slate-500">
-                    <i class="fa-brands fa-x-twitter"></i>
-                    <i class="fa-brands fa-discord"></i>
+                <div class="flex items-center gap-4 border-l border-white/5 pl-4">
+                    <p class="text-[8px] text-slate-500 font-bold uppercase tracking-widest">Quimera Guild:</p>
+                    <div class="flex gap-3 text-slate-400">
+                        <a href="https://x.com/QuimeraSA_" target="_blank" class="hover:text-white transition-colors"><i class="fa-brands fa-x-twitter"></i></a>
+                        <a href="https://discord.gg/aVM5KjMeB6" target="_blank" class="hover:text-indigo-400 transition-colors"><i class="fa-brands fa-discord"></i></a>
+                    </div>
                 </div>
             </div>
         </footer>
@@ -128,6 +163,36 @@
         const API_ORIGINAL = 'https://holosim-galaxy.staratlas.com/territory-control';
         const PROXY_RAPIDO = `https://corsproxy.io/?${encodeURIComponent(API_ORIGINAL)}`;
         let activeTab = 'mud';
+        let currentLang = 'es';
+
+        const i18n = {
+            es: {
+                dataLabel: "DATOS OFICIALES DEL:",
+                footerRole: "Miembro Directivo // Quimera Guild",
+                communityText: "Creado para la comunidad",
+                btnTip: "Propina Operativa",
+                tooltip: "Este valor corresponde al campo 'timeMultiplier' de la API original. Indica el factor de velocidad de cálculo de puntos en la simulación.",
+                sectorControl: "Control de Sector"
+            },
+            en: {
+                dataLabel: "OFFICIAL DATA FROM:",
+                footerRole: "Executive Member // Quimera Guild",
+                communityText: "Created for the community",
+                btnTip: "Support Project",
+                tooltip: "This value corresponds to the 'timeMultiplier' field from the original API. It indicates the speed factor for point calculation in the simulation.",
+                sectorControl: "Sector Control"
+            }
+        };
+
+        function changeLang(lang) {
+            currentLang = lang;
+            document.getElementById('data-label').innerText = i18n[lang].dataLabel;
+            document.getElementById('footer-role').innerText = i18n[lang].footerRole;
+            document.getElementById('community-text').innerText = i18n[lang].communityText;
+            document.getElementById('btn-tip').innerText = i18n[lang].btnTip;
+            document.getElementById('tooltip-text').innerText = i18n[lang].tooltip;
+            loadData(); // Re-renderizar para actualizar textos en tarjetas
+        }
 
         async function loadData() {
             let data = null;
@@ -140,7 +205,7 @@
                     const res = await fetch(PROXY_RAPIDO);
                     if(res.ok) data = await res.json();
                 } catch (e) {
-                    document.getElementById('data-age').innerText = "SYSTEM ERROR: CONNECTION LOST";
+                    document.getElementById('data-age').innerText = "SYSTEM ERROR";
                     return;
                 }
             }
@@ -153,18 +218,19 @@
             const target = document.getElementById(`tab-${faction}`);
             if(target) target.classList.add('active');
             
+            const colors = { mud: '#ef4444', oni: '#3b82f6', ustur: '#facc15' };
             ['mud', 'oni', 'ustur'].forEach(f => {
                 const btn = document.getElementById(`btn-${f}`);
                 if(btn) {
                     btn.style.opacity = f === faction ? "1" : "0.5";
-                    btn.style.borderBottom = f === faction ? `2px solid` : "none";
+                    btn.style.borderBottom = f === faction ? `2px solid ${colors[f]}` : "none";
                 }
             });
         }
 
         function render(data) {
             const date = new Date(data.timestamp);
-            document.getElementById('data-age').innerText = "TERMINAL ACTUALIZADA: " + date.toLocaleTimeString();
+            document.getElementById('data-age').innerText = date.toLocaleString();
             document.getElementById('multiplier').innerText = data.timeMultiplier.toFixed(4);
 
             const cont = document.getElementById('container');
@@ -172,19 +238,22 @@
 
             ['mud', 'oni', 'ustur'].forEach(key => {
                 const f = data.factions[key];
-                const colorClass = key === 'mud' ? 'text-yellow-400' : (key === 'oni' ? 'text-red-500' : 'text-blue-500');
+                const colorClass = key === 'mud' ? 'text-red-500' : (key === 'oni' ? 'text-blue-500' : 'text-yellow-400');
                 
                 cont.innerHTML += `
                     <div id="tab-${key}" class="tab-content ${key === activeTab ? 'active' : ''}">
-                        <div class="glass p-3 md:p-5 rounded-lg neon-card ${key}-card flex flex-col">
-                            <div class="flex justify-between items-start mb-2 md:mb-6">
-                                <h2 class="font-header text-xl md:text-2xl font-black uppercase ${colorClass}">${key}</h2>
+                        <div class="glass p-3 md:p-5 rounded-lg neon-card ${key}-card flex flex-col h-full">
+                            <div class="flex justify-between items-start mb-2 md:mb-4">
+                                <div>
+                                    <h2 class="font-header text-xl md:text-2xl font-black uppercase ${colorClass}">${key}</h2>
+                                    <p class="text-[8px] text-slate-500 font-bold uppercase tracking-widest">${i18n[currentLang].sectorControl}</p>
+                                </div>
                                 <div class="text-right leading-none">
                                     <p class="text-lg md:text-xl font-bold font-header text-white">${Math.floor(f.currentPoints).toLocaleString()}</p>
-                                    <p class="text-[8px] md:text-[9px] text-emerald-400 font-bold uppercase">+${f.pointsAdded.toFixed(2)}</p>
+                                    <p class="text-[8px] md:text-[9px] text-emerald-400 font-bold uppercase mt-1">+${f.pointsAdded.toFixed(2)}</p>
                                 </div>
                             </div>
-                            <div class="space-y-1 md:space-y-2 overflow-y-auto pr-1">
+                            <div class="space-y-1 md:space-y-2 overflow-y-auto pr-1 flex-grow scroll-thin">
                                 ${f.starbases.sort((a,b) => b.level - a.level).map(sb => `
                                     <div class="flex justify-between items-center border-b border-white/5 pb-1">
                                         <span class="text-[9px] md:text-[10px] text-slate-400 font-bold uppercase truncate mr-2">${sb.name}</span>
